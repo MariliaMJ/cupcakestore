@@ -1,0 +1,19 @@
+# Arquivos de configuração específicos do ambiente
+*.env
+
+# Arquivos de banco de dados
+db.sqlite3
+
+# Diretório de arquivos estáticos
+staticfiles/
+
+# Diretório de mídia (imagens enviadas pelos usuários, etc.)
+media/
+
+# Arquivos gerados automaticamente
+__pycache__/
+*.pyc
+*.pyo
+
+# Diretório virtualenv (se você estiver usando um ambiente virtual)
+venv/

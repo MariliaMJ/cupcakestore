@@ -15,5 +15,5 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Diretório virtualenv (se você estiver usando um ambiente virtual)
-venv/
+# Diretório virtualenv 
+myenv/

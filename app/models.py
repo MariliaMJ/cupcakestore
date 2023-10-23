@@ -4,10 +4,12 @@ import uuid
 
 class Cupcake(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    nome = models.CharField(max_length=100)
     sabor = models.CharField(max_length=100)
     cobertura = models.TextField()
     recheio = models.TextField()
     preco = models.DecimalField(max_digits=5, decimal_places=2)
+    imagem = models.URLField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 

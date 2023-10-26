@@ -32,7 +32,7 @@ CACHES = {
     }
 }
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','.ngrok-free.app', '*', '::1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '::1']
 
 
 # Application definition
@@ -44,7 +44,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "app"
+    "app",
+]
+
+AUTH_USER_MODEL = 'app.User'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
@@ -130,33 +136,5 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGGING = {
-    'version': 1,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        }
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    }
-}
-
-if DEBUG:
-    # make all loggers use the console.
-    for logger in LOGGING['loggers']:
-        LOGGING['loggers'][logger]['handlers'] = ['console']
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o banco de dados para armazenar sessões
+SESSION_COOKIE_SECURE = False  # Defina como True para HTTPS

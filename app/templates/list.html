@@ -17,18 +17,24 @@
             <div class="header-text" >Cupcake Lover</div>
         </div>
         <ul class="nav-links">
-            <li><a href="#"><i class="fas fa-shopping-cart fa-2x"></i></a></li>
+            <div id="cart-icon">
+                <a href="{% url 'view-cart' %}">
+                    <i class="fas fa-shopping-cart fa-2x"></i>
+                    <span id="cart-count">0</span>
+                </a>
+            </div>
             <li><a href="#"><i class="fas fa-user fa-2x"></i></a></li>
         </ul>
     </header>
     
     <main>
+        <!-- <script src="{% static 'java_script/cart_count.js' %}"></script> -->
         {% for cupcake in cupcakes %}
         <section class="cupcake-box">
             <img src="{{ cupcake.imagem }}">
             <h2 class="cupcake-name">{{ cupcake.nome }}</h2>
             <span class="price">R$ {{ cupcake.preco }}</span>
-            <button class="add-to-cart">Adicionar</button>
+            <a href="{% url 'add-to-cart' cupcake.id %}" class="add-to-cart">Adicionar</a>
         </section>
         {% endfor %}
     </main>

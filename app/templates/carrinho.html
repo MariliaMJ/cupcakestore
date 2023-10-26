@@ -1,0 +1,25 @@
+<!-- cart.html -->
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="cart-title">Seu Carrinho</h1>
+    <div class="cart-items">
+        {% for item in cart_items %}
+            <!-- HTML -->
+            <div class="cart-item">
+                <div class="cupcake-image">
+                    <img src="{{ item.cupcake.imagem }}" alt="{{ item.cupcake.nome }}">
+                </div>
+                <div class="cupcake-details">
+                    <h3>{{ item.cupcake.nome }}</h3>
+                    <p>Quantidade: {{ item.quantity }}</p>
+                    <p>Preço: R$ {{ item.total_per_product }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="total-box">
+        <p class="cart-total">Total: R$ {{ total }}</p>
+        <button class="checkout-button">Checkout</button>
+    </div>
+{% endblock %}

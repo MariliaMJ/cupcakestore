@@ -20,5 +20,8 @@ from app import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('cupcakes/', views.get_cupcakes, name='get_cupcakes'),
+    path('cupcakes/', views.get_cupcakes, name='get-cupcakes'),
+    path('add-to-cart/<uuid:cupcake_id>/', views.add_to_cart, name='add-to-cart'),
+    path('cart/', views.view_cart, name='view-cart'),
+    path('checkout/', views.checkout, name='checkout'),
 ]

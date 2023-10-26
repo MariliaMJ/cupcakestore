@@ -17,3 +17,5 @@ __pycache__/
 
 # Diretório virtualenv 
 myenv/
+
+.DS_Store

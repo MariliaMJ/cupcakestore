@@ -1,7 +1,19 @@
 from django.contrib import admin
-from .models import Cupcake,Pedido,ItemPedido,Usuario,Endereco  # Importe o modelo de Cupcake que você criou
+from .models import Cupcake,Pedido,ItemPedido 
 
 admin.site.register(Cupcake)
 
+class ItemPedidoInline(admin.TabularInline):
+    model = ItemPedido
+    extra = 0 
 
-# Register your models here.
+class ItemPedidoAdmin(admin.ModelAdmin):
+    list_display = ("cupcake", "quantidade", "pedido")
+
+admin.site.register(ItemPedido, ItemPedidoAdmin)
+
+class PedidoAdmin(admin.ModelAdmin):
+    list_display = ("usuario", "endereco_usuario", "itens_pedido", "numero_pedido") 
+    inlines = [ItemPedidoInline]
+
+admin.site.register(Pedido, PedidoAdmin)

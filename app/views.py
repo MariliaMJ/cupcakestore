@@ -74,10 +74,8 @@ def get_customers_data(request):
 
 def checkout(request):
     cart = request.session.get("cart", {})
-    logging.debug(f"checkout cart from session {cart}")
 
     if "cliente_id" not in request.session:
-        logging.debug(f"getting client from session")
         endereco_form = AddressForm(request.POST, prefix="endereco")
         usuario_form = UserForm(request.POST, prefix="usuario")
 
@@ -86,8 +84,6 @@ def checkout(request):
         and endereco_form.is_valid()
         and usuario_form.is_valid()
     ):
-        
-
         with transaction.atomic():
             endereco = endereco_form.save()
             usuario = usuario_form.save(commit=False)
@@ -98,17 +94,19 @@ def checkout(request):
             pedido = Pedido()
             pedido.usuario = cliente
             pedido.save()
+
             for cupcake_id, quantity in cart.items():
                 cupcake = Cupcake.objects.get(pk=cupcake_id)
-                item = ItemPedido(produto=cupcake, pedido=pedido, quantidade=quantity)
+                valor = cupcake.preco
+                valor_total = cupcake.preco * quantity
+                item = ItemPedido(cupcake=cupcake, pedido=pedido, quantidade=quantity, valor=valor, valor_total=valor_total)
                 item.save()
 
             request.session["cart"] = {}
         transaction.commit()
-        return render(request, "list.html")
+        
+        return render(request, "confirmation.html")
     else:
-        # TODO fix this for form validation
-        logging.debug(f"forms not valid")
         return render(
             request,
             "checkout.html",
@@ -119,10 +117,12 @@ def checkout(request):
 def order(request):
     return render(request, "order.html")
 
-
 def _get_usuario(usuarioForm: Usuario) -> Usuario:
-    usuario = Usuario.objects.get(email=usuarioForm.email)
-    breakpoint()
-    if not usuario:
+    try:
+        usuario = Usuario.objects.get(email=usuarioForm.email)
+
+        if not usuario:
+            return usuarioForm
+        return usuario
+    except:
         return usuarioForm
-    return usuario

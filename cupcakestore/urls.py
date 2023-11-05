@@ -17,11 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app import views
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('cupcakes/', views.get_cupcakes, name='get-cupcakes'),
-    path('add-to-cart/<uuid:cupcake_id>/', views.add_to_cart, name='add-to-cart'),
-    path('cart/', views.view_cart, name='view-cart'),
-    path('checkout/', views.checkout, name='checkout'),
+    path("cupcakes/", views.get_cupcakes, name="get-cupcakes"),
+    path("add-to-cart/<uuid:cupcake_id>/", views.add_to_cart, name="add-to-cart"),
+    path("cart/", views.view_cart, name="view-cart"),
+    path("checkout/", views.checkout, name="checkout"),
+    path("order/", views.checkout, name="checkout"),
+    
 ]

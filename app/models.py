@@ -1,5 +1,6 @@
 from enum import Enum
 from django.db import models
+from django.utils import timezone
 import uuid 
 
 class Cupcake(models.Model):
@@ -20,11 +21,11 @@ class Cupcake(models.Model):
 class Endereco(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     logradouro = models.CharField(max_length=100)
-    rua = models.TextField()
-    bairro = models.TextField()
-    cidade = models.TextField()
-    estado = models.TextField()
-    cep = models.TextField()
+    rua = models.CharField(max_length=255)
+    bairro = models.CharField(max_length=100)
+    cidade = models.CharField(max_length=100)
+    estado = models.CharField(max_length=100)
+    cep = models.CharField(max_length=9)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -34,10 +35,10 @@ class Endereco(models.Model):
 class Usuario(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nome = models.CharField(max_length=100)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     telefone = models.CharField(max_length=20)
     username = models.CharField(max_length=30)
-    endereco = models.DecimalField(max_digits=5, decimal_places=2)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -52,20 +53,22 @@ class StatusPedido(Enum):
     CONCLUIDO = 'Concluído'
     CANCELADO = 'Cancelado'
 
-class Item(models.Model):
+
+class ItemPedido(models.Model):
     produto = models.ForeignKey(Cupcake, on_delete=models.CASCADE)
     quantidade = models.PositiveIntegerField()
     # Outros campos relevantes para os itens
     pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.nome
+        return f"{self.cupcake} ({self.quantidade})"
+
 
 class Pedido(models.Model):
-    numero_pedido = models.CharField(max_length=10)
+    numero_pedido = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    data = models.DateTimeField()
-    itens = models.ManyToManyField(Item, related_name='pedidos')
+    data = models.DateTimeField(default=timezone.now)
+    itens = models.ManyToManyField(ItemPedido, related_name='pedidos')
     status = models.CharField(
         max_length=20,
         choices=[(status.name, status.value) for status in StatusPedido],
@@ -73,5 +76,4 @@ class Pedido(models.Model):
     )
 
     def __str__(self):
-        return self.numero_pedido
-    
+        return str(self.numero_pedido)

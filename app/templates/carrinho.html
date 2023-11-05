@@ -20,6 +20,6 @@
     </div>
     <div class="total-box">
         <p class="cart-total">Total: R$ {{ total }}</p>
-        <button class="checkout-button">Checkout</button>
+        <a href="{% url 'checkout' %}" class="checkout-button">Checkout</a>
     </div>
 {% endblock %}

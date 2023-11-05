@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Checkout</title>
+</head>
+<body>
+    <div class="iphone">
+        <header class="header">
+            <h1>Checkout</h1>
+        </header>
+
+        <form method="post" class="form">
+            {% csrf_token %}
+
+            <div class="form__group">
+                <h2>Dados Pessoais</h2>
+
+                <div class="card">
+                    {{ usuario_form.as_p }}
+                </div>
+            </div>
+
+            <div class="form__group">
+                <h2>Endereço</h2>
+
+                <div class="card">
+                    {{ endereco_form.as_p }}
+                </div>
+            </div>
+            <button type="submit" class="finish-button">Fazer Pedido</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

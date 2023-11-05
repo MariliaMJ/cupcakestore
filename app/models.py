@@ -35,7 +35,7 @@ class Endereco(models.Model):
 class Usuario(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nome = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     telefone = models.CharField(max_length=20)
     username = models.CharField(max_length=30)
 
@@ -55,25 +55,40 @@ class StatusPedido(Enum):
 
 
 class ItemPedido(models.Model):
-    produto = models.ForeignKey(Cupcake, on_delete=models.CASCADE)
+    cupcake = models.ForeignKey(Cupcake, on_delete=models.CASCADE)
     quantidade = models.PositiveIntegerField()
-    # Outros campos relevantes para os itens
-    pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
+    valor = models.DecimalField(null=False, decimal_places=2, max_digits=10)
+    valor_total = models.DecimalField(null=False, decimal_places=2, max_digits=10)
+    pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE, related_name="itens")
 
     def __str__(self):
-        return f"{self.cupcake} ({self.quantidade})"
+        return f"{self.cupcake.nome} ({self.quantidade})"
 
 
 class Pedido(models.Model):
     numero_pedido = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     data = models.DateTimeField(default=timezone.now)
-    itens = models.ManyToManyField(ItemPedido, related_name='pedidos')
     status = models.CharField(
         max_length=20,
         choices=[(status.name, status.value) for status in StatusPedido],
         default=StatusPedido.PENDENTE.value
     )
+    
+    def itens_pedido(self):
+        item_descriptions = []
+        for item in self.itens.all():
+            description = f"{item.quantidade}x {item.cupcake.nome}"
+            item_descriptions.append(description)
+        return ", ".join(item_descriptions)
+    itens_pedido.short_description = "Itens do Pedido"
+
+    def endereco_usuario(self):
+        return f"{self.usuario.endereco.logradouro} {self.usuario.endereco} cep: {self.usuario.endereco.cep} bairro:"
+
+    endereco_usuario.short_description = "Endereço do Usuário"
 
     def __str__(self):
-        return str(self.numero_pedido)
+        return f"Pedido {self.numero_pedido} de {self.usuario}"
+
+

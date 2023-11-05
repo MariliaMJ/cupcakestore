@@ -202,5 +202,55 @@ p {
     margin: 5px 0;
 }
 
+.confirmation-message {
+    background-color: #FFC0CB; /* Rosa claro */
+    border: 1px solid #FF69B4; /* Borda rosa mais escura */
+    border-radius: 10px; /* Borda arredondada */
+    padding: 20px; /* Espaçamento interno */
+    text-align: center;
+}
 
+.return-button {
+    text-align: center;
+}
+
+.checkout-bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ffcccc; /* Fundo branco para o restante da página */
+}
+
+.checkout-box {
+    background-color: #fff;
+    border-radius: 10px; /* Borda arredondada */
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.finish-button {
+    background-color: #87CEFA;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 2.2em;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.form__group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+
+ul {
+    list-style: none;
+    padding: 0;
+}
 

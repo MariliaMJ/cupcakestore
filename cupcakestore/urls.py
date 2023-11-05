@@ -27,5 +27,4 @@ urlpatterns = [
     path("cart/", views.view_cart, name="view-cart"),
     path("checkout/", views.checkout, name="checkout"),
     path("order/", views.checkout, name="checkout"),
-    
 ]

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="confirmation-message">
+        <h2>Seu pedido foi confirmado!</h2>
+        <p>Aguarde a entrega. Seu pagamento será feito no ato da entrega.</p>
+    </div>
+    <div class="return-button">
+        <a href="{% url 'get-cupcakes' %}" class="btn btn-primary">Retornar à página principal</a>
+    </div>
+{% endblock %}

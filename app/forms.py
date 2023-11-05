@@ -4,6 +4,19 @@ from .models import Endereco
 
 
 class UserForm(forms.ModelForm):
+    nome = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input-field'}),
+        label="Nome"
+    )
+    email = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input-field'}),
+        label="Email"
+    )
+    telefone = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input-field'}),
+        label="Telefone"
+    )
+
     class Meta:
         model = Usuario
         fields = ["nome", "email", "telefone"]

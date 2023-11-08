@@ -138,3 +138,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o banco de dados para armazenar sessões
 SESSION_COOKIE_SECURE = False  # Defina como True para HTTPS
+
+LOGIN_REDIRECT_URL = '/cupcakes'

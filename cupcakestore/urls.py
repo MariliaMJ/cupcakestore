@@ -26,5 +26,5 @@ urlpatterns = [
     path("add-to-cart/<uuid:cupcake_id>/", views.add_to_cart, name="add-to-cart"),
     path("cart/", views.view_cart, name="view-cart"),
     path("checkout/", views.checkout, name="checkout"),
-    path("order/", views.checkout, name="checkout"),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

@@ -32,7 +32,7 @@
         {% for cupcake in cupcakes %}
         <section class="cupcake-box">
             <img src="{{ cupcake.imagem }}">
-            <h2 class="cupcake-name">{{ cupcake.nome }}</h2>
+            <h2 class="cupcake-name">{{ cupcake.name }}</h2>
             <span class="price">R$ {{ cupcake.preco }}</span>
             <a href="{% url 'add-to-cart' cupcake.id %}" class="add-to-cart">Adicionar</a>
         </section>

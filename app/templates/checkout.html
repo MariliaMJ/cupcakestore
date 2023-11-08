@@ -6,13 +6,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Borel">
     <title>Checkout</title>
 </head>
 <body>
     <div class="checkout-bg">
         <div class="checkout-box">
-            <header class="header">
-                <h1>Checkout</h1>
+            <header class="checkout-header">
+                <h1 class="checkout-header-label">Checkout</h1>
             </header>
 
             <form method="post" class="form">
@@ -22,7 +24,17 @@
                     <h2>Dados Pessoais</h2>
 
                     <div class="card">
-                        {{ usuario_form.as_p }}
+                        <label for="{{ address_form.name.id }}">Name</label>
+                        {{ customer_form.name }}
+                        <div class="error-message">{{ customer_form.name.errors }}</div>
+
+                        {{ customer_form.email.label_tag }}
+                        {{ customer_form.email }}
+                        <div class="error-message">{{ customer_form.email.errors }}</div>
+
+                        {{ customer_form.phone_number.label_tag }}
+                        {{ customer_form.phone_number }}
+                        <div class="error-message">{{ customer_form.phone_number.errors }}</div>
                     </div>
                 </div>
 
@@ -30,10 +42,30 @@
                     <h2>Endereço</h2>
 
                     <div class="card">
-                        {{ endereco_form.as_p }}
+                        <label for="{{ customer_form.street.id }}">Street</label>
+                        {{ address_form.street }}
+                        <div class="error-message">{{ address_form.street.errors }}</div>
+
+                        {{ address_form.neighborhood.label_tag }}
+                        {{ address_form.neighborhood }}
+                        <div class="error-message">{{ address_form.neighborhood.errors }}</div>
+
+                        {{ address_form.city.label_tag }}
+                        {{ address_form.city }}
+                        <div class="error-message">{{ address_form.city.errors }}</div>
+
+                        {{ address_form.state.label_tag }}
+                        {{ address_form.state }}
+                        <div class="error-message">{{ address_form.state.errors }}</div>
+
+                        {{ address_form.zip_code.label_tag }}
+                        {{ address_form.zip_code }}
+                        <div class="error-message">{{ address_form.zip_code.errors }}</div>
+                        
+                    
                     </div>
                 </div>
-                <button type="submit" class="finish-button">Fazer Pedido</a>
+                <button type="submit" class="finish-button">Fazer Order</a>
                 </div>
             </form>
         </div>

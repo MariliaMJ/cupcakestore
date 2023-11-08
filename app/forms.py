@@ -1,27 +1,41 @@
 from django import forms
-from .models import Usuario
-from .models import Endereco
+from .models import Customer
+from .models import Address
 
 
-class UserForm(forms.ModelForm):
-    nome = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input-field'}),
-        label="Nome"
+class CustomerForm(forms.ModelForm):
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Name"
     )
     email = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input-field'}),
-        label="Email"
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Email"
     )
-    telefone = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input-field'}),
-        label="Telefone"
+    phone_number = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Phone_number"
     )
 
     class Meta:
-        model = Usuario
-        fields = ["nome", "email", "telefone"]
+        model = Customer
+        fields = ["name", "email", "phone_number"]
+
 
 class AddressForm(forms.ModelForm):
+    street = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Street"
+    )
+    neighborhood = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Neighborhood"
+    )
+    city = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="City"
+    )
+    state = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="State"
+    )
+    zip_code = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Zip_code"
+    )
+
     class Meta:
-        model = Endereco
-        fields = ['logradouro', 'rua', 'bairro', 'cidade', 'estado', 'cep']
+        model = Address
+        fields = ["street", "neighborhood", "city", "state", "zip_code"]

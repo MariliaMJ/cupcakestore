@@ -7,8 +7,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import AddressForm, UserForm
-from .models import Cupcake, Endereco, Pedido, Usuario, ItemPedido
+from .forms import AddressForm, CustomerForm
+from .models import Cupcake, Address, Order, Customer, ItemOrder
 
 
 def get_cupcakes(request):
@@ -76,53 +76,60 @@ def checkout(request):
     cart = request.session.get("cart", {})
 
     if "cliente_id" not in request.session:
-        endereco_form = AddressForm(request.POST, prefix="endereco")
-        usuario_form = UserForm(request.POST, prefix="usuario")
+        address_form = AddressForm(request.POST, prefix="address")
+        customer_form = CustomerForm(request.POST, prefix="customer")
 
     if (
         request.method == "POST"
-        and endereco_form.is_valid()
-        and usuario_form.is_valid()
+        and address_form.is_valid()
+        and customer_form.is_valid()
     ):
         with transaction.atomic():
-            endereco = endereco_form.save()
-            usuario = usuario_form.save(commit=False)
-            cliente = _get_usuario(usuario)
-            cliente.endereco = endereco
+            address = address_form.save()
+            customer = customer_form.save(commit=False)
+            cliente = _get_customer(customer)
+            cliente.address = address
             cliente.save()
 
-            pedido = Pedido()
-            pedido.usuario = cliente
-            pedido.save()
+            order = Order()
+            order.customer = cliente
+            order.save()
 
             for cupcake_id, quantity in cart.items():
                 cupcake = Cupcake.objects.get(pk=cupcake_id)
-                valor = cupcake.preco
-                valor_total = cupcake.preco * quantity
-                item = ItemPedido(cupcake=cupcake, pedido=pedido, quantidade=quantity, valor=valor, valor_total=valor_total)
+                value = cupcake.preco
+                value_total = cupcake.preco * quantity
+                item = ItemOrder(
+                    cupcake=cupcake,
+                    order=order,
+                    quantity=quantity,
+                    value=value,
+                    value_total=value_total,
+                )
                 item.save()
 
             request.session["cart"] = {}
         transaction.commit()
-        
+
         return render(request, "confirmation.html")
     else:
         return render(
             request,
             "checkout.html",
-            {"endereco_form": endereco_form, "usuario_form": usuario_form},
+            {"address_form": address_form, "customer_form": customer_form},
         )
 
 
 def order(request):
     return render(request, "order.html")
 
-def _get_usuario(usuarioForm: Usuario) -> Usuario:
-    try:
-        usuario = Usuario.objects.get(email=usuarioForm.email)
 
-        if not usuario:
-            return usuarioForm
-        return usuario
+def _get_customer(customerForm: Customer) -> Customer:
+    try:
+        customer = Customer.objects.get(email=customerForm.email)
+
+        if not customer:
+            return customerForm
+        return customer
     except:
-        return usuarioForm
+        return customerForm

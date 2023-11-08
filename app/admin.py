@@ -1,19 +1,24 @@
 from django.contrib import admin
-from .models import Cupcake,Pedido,ItemPedido 
+from .models import Cupcake, Order, ItemOrder
 
 admin.site.register(Cupcake)
 
-class ItemPedidoInline(admin.TabularInline):
-    model = ItemPedido
-    extra = 0 
 
-class ItemPedidoAdmin(admin.ModelAdmin):
-    list_display = ("cupcake", "quantidade", "pedido")
+class ItemOrderInline(admin.TabularInline):
+    model = ItemOrder
+    extra = 0
 
-admin.site.register(ItemPedido, ItemPedidoAdmin)
 
-class PedidoAdmin(admin.ModelAdmin):
-    list_display = ("usuario", "endereco_usuario", "itens_pedido", "numero_pedido") 
-    inlines = [ItemPedidoInline]
+class ItemOrderAdmin(admin.ModelAdmin):
+    list_display = ("cupcake", "quantity", "order")
 
-admin.site.register(Pedido, PedidoAdmin)
+
+admin.site.register(ItemOrder, ItemOrderAdmin)
+
+
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ("customer", "address_customer", "items_order", "order_number")
+    inlines = [ItemOrderInline]
+
+
+admin.site.register(Order, OrderAdmin)

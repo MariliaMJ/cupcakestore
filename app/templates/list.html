@@ -31,9 +31,9 @@
         <!-- <script src="{% static 'java_script/cart_count.js' %}"></script> -->
         {% for cupcake in cupcakes %}
         <section class="cupcake-box">
-            <img src="{{ cupcake.imagem }}">
+            <img src="{{ cupcake.image }}">
             <h2 class="cupcake-name">{{ cupcake.name }}</h2>
-            <span class="price">R$ {{ cupcake.preco }}</span>
+            <span class="price">R$ {{ cupcake.price }}</span>
             <a href="{% url 'add-to-cart' cupcake.id %}" class="add-to-cart">Adicionar</a>
         </section>
         {% endfor %}

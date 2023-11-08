@@ -50,11 +50,11 @@ def view_cart(request):
             {
                 "cupcake": cupcake,
                 "quantity": quantity,
-                "total_per_product": quantity * cupcake.preco,
+                "total_per_product": quantity * cupcake.price,
             }
         )
 
-        total += cupcake.preco * quantity
+        total += cupcake.price * quantity
 
     return render(request, "carrinho.html", {"cart_items": cart_items, "total": total})
 
@@ -97,8 +97,8 @@ def checkout(request):
 
             for cupcake_id, quantity in cart.items():
                 cupcake = Cupcake.objects.get(pk=cupcake_id)
-                value = cupcake.preco
-                value_total = cupcake.preco * quantity
+                value = cupcake.price
+                value_total = cupcake.price * quantity
                 item = ItemOrder(
                     cupcake=cupcake,
                     order=order,

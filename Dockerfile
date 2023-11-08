@@ -1,4 +1,4 @@
-# Use a imagem base Python
+# Use a image base Python
 FROM python:3.8
 
 # Crie e defina o diretório de trabalho no contêiner

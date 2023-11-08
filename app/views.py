@@ -61,13 +61,13 @@ def view_cart(request):
 
 def get_customers_data(request):
     if request.method == "POST":
-        form = ClienteForm(request.POST)
+        form = CustomerForm(request.POST)
         if form.is_valid():
             cliente = form.save()
             request.session["cliente_id"] = cliente.id
             return redirect("checkout")
     else:
-        form = ClienteForm()
+        form = CustomerForm()
 
     return render(request, "coleta_dados_cliente.html", {"form": form})
 
@@ -118,10 +118,6 @@ def checkout(request):
             "checkout.html",
             {"address_form": address_form, "customer_form": customer_form},
         )
-
-
-def order(request):
-    return render(request, "order.html")
 
 
 def _get_customer(customerForm: Customer) -> Customer:

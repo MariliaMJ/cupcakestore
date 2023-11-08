@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+        {% block content %}
+        {% if form.errors %}
+            <p>Sua senha e/ou usuário não batem ou seu usuário não está cadastrado</p>
+        {% endif %}
+
+        {% if next %}
+            {% if user.is_authenticated %}
+            <p>Sua conta não tem acesso a este conteúdo. Para acessar, verifique seu acesso e tente novamente</p>
+            {% else %}
+            <p>Por favor, faça o login para ver esta página</p>
+            {% endif %}
+        {% endif %}
+        <div class="login-form-background">
+            <div class="login-form-box">
+                <div class="login-form">
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <table>
+                        <tr>
+                            <td>{{ form.username.label_tag }}</td>
+                            <td>{{ form.username }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form.password.label_tag }}</td>
+                            <td>{{ form.password }}</td>
+                        </tr>
+                        </table>
+                        <input type="submit" value="login" class="login-button">
+                        <input type="hidden" name="next" value="{{ next }}">
+                    </form>
+                
+                    <p><a href="{% url 'password_reset' %}">Esqueci minha senha</a></p>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </div>
+</body>
+

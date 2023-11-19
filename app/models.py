@@ -2,6 +2,7 @@ from enum import Enum
 from django.db import models
 from django.utils import timezone
 import uuid
+from django.contrib.auth.models import User
 
 
 class Cupcake(models.Model):
@@ -36,15 +37,13 @@ class Address(models.Model):
 
 class Customer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
     phone_number = models.CharField(max_length=20)
-    username = models.CharField(max_length=30)
-
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name

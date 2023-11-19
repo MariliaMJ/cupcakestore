@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Perfil do Usuário</h1>
+
+  {% if user_data %}
+    <h2>Dados Pessoais</h2>
+    <form method="post" action="{% url 'user-account' %}">
+      {% csrf_token %}
+      {{ user_form.as_p }}
+      {{ address_form.as_p }}
+      <button type="submit">Salvar</button>
+    </form>
+  {% else %}
+    <h2>Cadastrar Dados</h2>
+    <form method="post" action="{% url 'user-account' %}">
+      {% csrf_token %}
+      {{ user_form.as_p }}
+      {{ address_form.as_p }}
+      <button type="submit">Salvar</button>
+    </form>
+  {% endif %}
+{% endblock %}

@@ -28,4 +28,7 @@ urlpatterns = [
     path("checkout/", views.checkout, name="checkout"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("signup/", views.user_signup, name="signup"),
+    path("menu/", views.user_menu, name="user-menu"),
+    path("user-account/", views.user_account, name="user-account"),
+    path("order-history/", views.user_account, name="order-history"),
 ]

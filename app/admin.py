@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import Cupcake, Order, ItemOrder
+from .models import Cupcake, Order, ItemOrder,Customer
 
 admin.site.register(Cupcake)
+admin.site.register(Customer)
 
 
 class ItemOrderInline(admin.TabularInline):

@@ -14,38 +14,46 @@ class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
 
-
-class CustomerForm(forms.ModelForm):
-    name = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "input-field"}), label="Name"
+class CustomUserCreationForm(UserCreationForm):
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Nome"
     )
-    email = forms.CharField(
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Sobrenome"
+    )
+    email = forms.EmailField(
         widget=forms.TextInput(attrs={"class": "input-field"}), label="Email"
     )
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+class CustomerForm(forms.ModelForm):
     phone_number = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "input-field"}), label="Phone_number"
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Telefone"
     )
 
     class Meta:
         model = Customer
-        fields = ["name", "email", "phone_number"]
+        fields = ["phone_number"]
 
 
 class AddressForm(forms.ModelForm):
     street = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "input-field"}), label="Street"
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Rua"
     )
     neighborhood = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "input-field"}), label="Neighborhood"
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Bairro"
     )
     city = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "input-field"}), label="City"
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Cidade"
     )
     state = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "input-field"}), label="State"
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Estado"
     )
     zip_code = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "input-field"}), label="Zip_code"
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="CEP"
     )
 
     class Meta:

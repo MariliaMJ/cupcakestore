@@ -16,15 +16,13 @@
             <img src="{% static 'images/cupcake_logo.png' %}" alt="Logo Cupcake E-commerce" width="55" height="55">
             <div class="header-text" >Cupcake Lover</div>
         </div>
-        <ul class="nav-links">
-            <div id="cart-icon">
-                <a href="{% url 'view-cart' %}">
-                    <i class="fas fa-shopping-cart fa-2x"></i>
-                    <span id="cart-count">0</span>
-                </a>
-            </div>
-            <li><a href="#"><i class="fas fa-user fa-2x"></i></a></li>
-        </ul>
+        <div class="menu-box">
+            <ul>
+                <li><a href="{% url 'user-account' %}"><i class="fas fa-user"></i> Perfil</a></li>
+                <li><a href="{% url 'order-history' %}"><i class="fas fa-clipboard-list"></i> Pedidos</a></li>
+                <li><a href="{% url 'view-cart' %}"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
+            </ul>
+        </div>
     </header>
     
     <main>
@@ -40,7 +38,7 @@
     </main>
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2023 Cupcake Lover. Todos os direitos reservados.</p>
+            <p>&copy; 2023 Cupcake Store. Todos os direitos reservados.</p>
         </div>
     </footer>
 </body>

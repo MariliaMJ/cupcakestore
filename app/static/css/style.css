@@ -24,6 +24,7 @@ header {
 }
 
 
+
 .logo img {
     width: 100px;
     height: 100px;
@@ -39,22 +40,39 @@ header {
 }
 
 .logo .header-text {
-    margin-left: 10px; /* Adicione margem à esquerda do texto */
+    margin-left: 10px;
 }
 
-/* Estilos para a barra de navegação */
-.nav-links {
-    list-style: none;
+.menu-header {
+    background-color: #FFB6C1;
+    padding: 10px;
+}
+
+.menu-box ul {
+    list-style-type: none;
+    padding: 0;
     display: flex;
-    gap: 20px;
-    margin: 30px;
 }
 
-.nav-links li a img {
-    width: 30px;
+.menu-box li {
+    margin-right: 20px;
+    text-align: center;
 }
 
-/* Estilos para a seção principal e caixas de cupcakes */
+.menu-box a {
+    text-decoration: none;
+    color: #d15296; 
+    font-size: 14px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+}
+
+.menu-box i {
+    margin-bottom: 5px;
+    font-size: 30px;
+}
+
 main {
     display: flex;
     flex-wrap: wrap;
@@ -62,6 +80,7 @@ main {
     align-items: center;
     padding: 20px;
 }
+
 
 .login-form {
     display: flex;

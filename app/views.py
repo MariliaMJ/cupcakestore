@@ -1,21 +1,22 @@
 from uuid import UUID
 
-from django.contrib.auth import login
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
+from django.core.mail import send_mail
 from django.db import transaction
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import AddressForm, CustomerForm, UserCreationForm, LoginForm
-from .models import Cupcake, Address, Order, Customer, ItemOrder
-from django.contrib.auth.forms import PasswordResetForm
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import AuthenticationForm
+from .forms import AddressForm, CustomerForm, LoginForm, UserCreationForm
+from .models import Address, Cupcake, Customer, ItemOrder, Order
+from django.contrib.auth.models import User
+
 
 def user_signup(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
@@ -24,24 +25,80 @@ def user_signup(request):
         form = UserCreationForm()
     return render(request, "signup.html", {"form": form})
 
+
 def login(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
             user = authenticate(request, username=username, password=password)
             if user:
-                login(request, user)    
+                login(request, user)
                 return redirect("cupcakes")
     else:
         form = LoginForm()
     return render(request, "login.html", {"form": form})
 
 
+def user_menu(request):
+    return render(request, "user_menu.html")
+
+
+@login_required
+def user_account(request):
+    try:
+        customer = Customer.objects.get(user=request.user)
+        user_data = {
+            "name": customer.user.first_name,
+            "email": customer.user.email,
+            "phone_number": customer.phone_number,
+            "address": {
+                "street": customer.address.street,
+                "neighborhood": customer.address.neighborhood,
+                "city": customer.address.city,
+                "state": customer.address.state,
+                "zip_code": customer.address.zip_code,
+            },
+        }
+
+        if request.method == "POST":
+            user_form = CustomerForm(request.POST, instance=customer)
+            address_form = AddressForm(request.POST, instance=customer.address)
+
+            if user_form.is_valid() and address_form.is_valid():
+                user_form.save()
+                address_form.save()
+
+        else:
+            user_form = CustomerForm(instance=customer)
+            address_form = AddressForm(instance=customer.address)
+
+        return render(request, "user_account.html", {"user_data": user_data, "user_form": user_form, "address_form": address_form})
+    except Customer.DoesNotExist:
+        if request.method == "POST":
+            user_form = CustomerForm(request.POST)
+            address_form = AddressForm(request.POST)
+
+            if user_form.is_valid() and address_form.is_valid():
+                user = user_form.save(commit=False)
+                address = address_form.save()
+                user.address = address
+                user.save()
+
+        else:
+            user_form = CustomerForm()
+            address_form = AddressForm()
+
+        return render(request, "user_account.html", {"user_data": None, "user_form": user_form, "address_form": address_form})
+    
+# def order_history(request):
+    
+
 def get_cupcakes(request):
     cupcakes = Cupcake.objects.all()
     return render(request, "list.html", {"cupcakes": cupcakes})
+
 
 def add_to_cart(request, cupcake_id):
     if request.method == "GET":
@@ -145,29 +202,39 @@ def checkout(request):
             {"address_form": address_form, "customer_form": customer_form},
         )
 
+
 def reset_password(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = PasswordResetForm(request.POST)
         if form.is_valid():
             form.save(request=request)
-            messages.success(request, 'Um e-mail com instruções para redefinir sua senha foi enviado para o seu endereço de e-mail.')
+            messages.success(
+                request,
+                "Um e-mail com instruções para redefinir sua senha foi enviado para o seu endereço de e-mail.",
+            )
 
-            email_subject = 'Instruções para redefinir a senha'
-            email_message = 'Siga as instruções no email para redefinir sua senha.'
-            from_email = 'mmjanizelli@gmail.com'
-            recipient_list = [form.cleaned_data['email']]
-            send_mail(email_subject, email_message, from_email, recipient_list, fail_silently=False)
+            email_subject = "Instruções para redefinir a senha"
+            email_message = "Siga as instruções no email para redefinir sua senha."
+            from_email = "mmjanizelli@gmail.com"
+            recipient_list = [form.cleaned_data["email"]]
+            send_mail(
+                email_subject,
+                email_message,
+                from_email,
+                recipient_list,
+                fail_silently=False,
+            )
 
-            return redirect("login") 
+            return redirect("login")
     else:
         form = PasswordResetForm()
-    
-    return render(request, "password_reset_done.html", {'form': form})
+
+    return render(request, "password_reset_done.html", {"form": form})
 
 
 def _get_customer(customerForm: Customer) -> Customer:
     try:
-        customer = Customer.objects.get(email=customerForm.email)
+        customer = Customer.objects.get(user_email=customerForm.email)
 
         if not customer:
             return customerForm

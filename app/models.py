@@ -46,7 +46,7 @@ class Customer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.name
+        return self.user.first_name
 
 
 class OrderStatus(Enum):
@@ -78,6 +78,7 @@ class Order(models.Model):
         choices=[(status.name, status.value) for status in OrderStatus],
         default=OrderStatus.PENDENTE.value,
     )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def items_order(self):
         item_descriptions = []

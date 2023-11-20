@@ -1,10 +1,9 @@
-/* Reset CSS para zerar margens e preenchimentos */
 * {
     margin: 0;
     padding: 0;
 }
 
-/* Estilos gerais para o corpo e cabeçalho */
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
@@ -118,6 +117,24 @@ main {
 }
 
 
+.order-history {
+    margin-top: 20px; 
+    font-family: 'Borel', sans-serif;
+    padding: 20px;
+}
+
+.order-details {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+}
+
+.order-details p {
+    font-weight: bold;
+}
+
 .login-form {
     display: flex;
     flex-direction: column;
@@ -128,7 +145,7 @@ main {
 .login-form-background {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Mude de 'center' para 'flex-start' */
+    justify-content: flex-start;
     align-items: center;
     height: 100vh;
     background-color: #ffcccc;
@@ -143,7 +160,7 @@ main {
     width: 100%;
     height: auto;
     text-align: center;
-    margin-top: 20px; /* Adicione margem superior para mover o formulário para cima */
+    margin-top: 20px;
 }
 
 .login-button {
@@ -181,7 +198,7 @@ main {
     padding: 20px;
     margin: 10px;
     border-radius: 10px;
-    height: 100%; /* Aumente a altura da caixa para acomodar o conteúdo */
+    height: 100%;
 }
 
 

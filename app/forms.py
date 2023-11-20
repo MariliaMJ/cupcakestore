@@ -1,7 +1,7 @@
 from django import forms
 from .models import Customer
 from .models import Address
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 
 
@@ -14,7 +14,7 @@ class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
 
-class CustomUserCreationForm(UserCreationForm):
+class CustomUserCreationForm(forms.ModelForm):
     first_name = forms.CharField(
         widget=forms.TextInput(attrs={"class": "input-field"}), label="Nome"
     )
@@ -28,6 +28,27 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
+
+class CustomUserUpdateForm(UserChangeForm):
+    password = None 
+
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Usuario"
+    )
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Nome"
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Sobrenome"
+    )
+    email = forms.EmailField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Email"
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
 
 class CustomerForm(forms.ModelForm):
     phone_number = forms.CharField(

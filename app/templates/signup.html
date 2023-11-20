@@ -1,7 +1,13 @@
-<h1>Signup</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Criar</button>
-    <a href="{% url 'login' %}">Já possui uma conta?></a>
-</form>
+{% extends "base.html" %}
+
+{% block title %}Signup - My Website{% endblock %}
+
+{% block content %}
+    <h1 class="signup-title">Signup</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Criar</button>
+        <a href="{% url 'login' %}">Já possui uma conta?</a>
+    </form>
+{% endblock %}

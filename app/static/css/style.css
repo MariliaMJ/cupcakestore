@@ -19,11 +19,47 @@ header {
     padding: 10px;
 }
 
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #87CEFA;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.user-data{
+    font-family: 'Borel', sans-serif;
+    text-align: center;
+    padding: 5px;
+}
+
 .header-text{
     white-space: nowrap;
 }
 
 
+.signup-title{
+    font-family: 'Borel', sans-serif;
+    text-align: center;
+}
 
 .logo img {
     width: 100px;

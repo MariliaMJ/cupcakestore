@@ -13,7 +13,9 @@
 <body>
     <header>
         <div class="logo">
-            <img src="{% static 'images/cupcake_logo.png' %}" alt="Logo Cupcake E-commerce" width="55" height="55">
+            <a href="{% url 'get-cupcakes' %}">
+                <img src="{% static 'images/cupcake_logo.png' %}" alt="Logo Cupcake E-commerce" width="55" height="55">
+            </a>            
             <div class="header-text" >Cupcake Lover</div>
         </div>
     </header>

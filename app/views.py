@@ -97,6 +97,19 @@ def user_account(request):
 
     return render(request, "user_account.html", {"user_data": user_data, "customer_form": customer_form, "customer_user_form": user_form, "address_form": address_form})
 
+@login_required
+def order_history(request):
+    try:
+        user = request.user
+
+        customer = Customer.objects.get(user=user)
+        orders = Order.objects.filter(customer=customer).order_by('-created_at')
+        context = {'orders': orders}
+
+        return render(request, 'order_history.html', context)
+    except Customer.DoesNotExist:
+        return render(request, 'order_history.html', {'orders': []})
+
 def get_cupcakes(request):
     cupcakes = Cupcake.objects.all()
     return render(request, "list.html", {"cupcakes": cupcakes})

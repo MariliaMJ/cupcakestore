@@ -29,5 +29,5 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("signup/", views.user_signup, name="signup"),
     path("user-account/", views.user_account, name="user-account"),
-    path("order-history/", views.user_account, name="order-history"),
+    path("order-history/", views.order_history, name="order-history"),
 ]

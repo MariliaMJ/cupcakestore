@@ -1,0 +1,28 @@
+<!-- order_history.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="order-history">Histórico de Pedidos</h1>
+
+  {% if orders %}
+    {% for order in orders %}
+      <div class="order-details">
+        <p>Número do Pedido: {{ order.order_number }}</p>
+        <p>Data do Pedido: {{ order.data }}</p>
+        <p>Status do Pedido: {{ order.status }}</p>
+
+        <h2>Itens do Pedido:</h2>
+        <ul>
+          {% for item in order.itens.all %}
+            <li>
+              {{ item.cupcake.name }} - Quantidade: {{ item.quantity }} - Valor Unitário: R$ {{ item.value }} - Valor Total: R$ {{ item.value_total }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Não há pedidos disponíveis.</p>
+  {% endif %}
+{% endblock %}

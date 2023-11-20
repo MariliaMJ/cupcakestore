@@ -3,16 +3,15 @@ from uuid import UUID
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import send_mail
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import AddressForm, CustomerForm, LoginForm, UserCreationForm
-from .models import Address, Cupcake, Customer, ItemOrder, Order
-from django.contrib.auth.models import User
+from .forms import AddressForm, CustomUserCreationForm, CustomerForm, LoginForm, UserCreationForm,CustomUserUpdateForm
+from .models import Cupcake, Customer, ItemOrder, Order
 
 
 def user_signup(request):
@@ -41,17 +40,13 @@ def login(request):
     return render(request, "login.html", {"form": form})
 
 
-def user_menu(request):
-    return render(request, "user_menu.html")
-
-
 @login_required
 def user_account(request):
     try:
         customer = Customer.objects.get(user=request.user)
         user_data = {
-            "name": customer.user.first_name,
-            "email": customer.user.email,
+            "name": request.user.first_name,
+            "email": request.user.email,
             "phone_number": customer.phone_number,
             "address": {
                 "street": customer.address.street,
@@ -63,37 +58,44 @@ def user_account(request):
         }
 
         if request.method == "POST":
-            user_form = CustomerForm(request.POST, instance=customer)
+            user_form = CustomUserUpdateForm(request.POST, instance=request.user)
+            customer_form = CustomerForm(request.POST, instance=customer)
             address_form = AddressForm(request.POST, instance=customer.address)
 
-            if user_form.is_valid() and address_form.is_valid():
+            if user_form.is_valid() and address_form.is_valid() and customer_form.is_valid():
                 user_form.save()
+                customer_form.save()
                 address_form.save()
+                messages.success(request, 'Dados atualizados com sucesso!')
+                return redirect('user-account')
 
         else:
-            user_form = CustomerForm(instance=customer)
+            user_form = CustomUserUpdateForm(instance=request.user)
+            customer_form = CustomerForm(instance=customer)
             address_form = AddressForm(instance=customer.address)
 
-        return render(request, "user_account.html", {"user_data": user_data, "user_form": user_form, "address_form": address_form})
     except Customer.DoesNotExist:
+        user_data = None
+        user_form = CustomUserUpdateForm()
+        customer_form = CustomerForm()
+        address_form = AddressForm()
+
         if request.method == "POST":
-            user_form = CustomerForm(request.POST)
+            user_form = CustomUserUpdateForm(request.POST)
+            customer_form = CustomerForm(request.POST)
             address_form = AddressForm(request.POST)
 
-            if user_form.is_valid() and address_form.is_valid():
+            if customer_form.is_valid() and address_form.is_valid():
                 user = user_form.save(commit=False)
+                customer = customer_form                
                 address = address_form.save()
-                user.address = address
-                user.save()
+                customer.address = address
+                customer.user = user
+                customer.save()
+                messages.success(request, 'Cadastro realizado com sucesso!')
+                return redirect('user-account')
 
-        else:
-            user_form = CustomerForm()
-            address_form = AddressForm()
-
-        return render(request, "user_account.html", {"user_data": None, "user_form": user_form, "address_form": address_form})
-    
-# def order_history(request):
-    
+    return render(request, "user_account.html", {"user_data": user_data, "customer_form": customer_form, "customer_user_form": user_form, "address_form": address_form})
 
 def get_cupcakes(request):
     cupcakes = Cupcake.objects.all()
@@ -157,10 +159,30 @@ def get_customers_data(request):
 
 def checkout(request):
     cart = request.session.get("cart", {})
+    user = request.user if request.user.is_authenticated else None
 
-    if "cliente_id" not in request.session:
+    if user:
+        customer = Customer.objects.get(user=user)
+
+        # TODO corrigir dado inicial
+        # se o usuário estiver logaod, o form deve vir preenchido com os dados 
+        # cadastrados, caso contrário, 'epossível fazeer o checkout sem login ou 
+        # oferecer a opção de logar 
+        initial_data = {
+            "address-street": customer.address.street,
+            "address-neighborhood": customer.address.neighborhood,
+            "address-city": customer.address.city,
+            "address-state": customer.address.state,
+            "address-zip_code": customer.address.zip_code,
+            "customer-name": customer.user.first_name,
+            "customer-email": customer.user.email,
+            "customer-phone_number": customer.phone_number,
+        }
+        address_form = AddressForm(initial=initial_data, prefix="address")
+        customer_form = CustomUserCreationForm(initial=initial_data, prefix="customer")
+    else:
         address_form = AddressForm(request.POST, prefix="address")
-        customer_form = CustomerForm(request.POST, prefix="customer")
+        customer_form = CustomUserCreationForm(request.POST, prefix="customer")
 
     if (
         request.method == "POST"

@@ -2,7 +2,7 @@ from enum import Enum
 from django.db import models
 from django.utils import timezone
 import uuid
-from django.contrib.auth.models import User
+from accounts.models import Account
 
 
 class Cupcake(models.Model):
@@ -43,7 +43,7 @@ class Customer(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.user.first_name

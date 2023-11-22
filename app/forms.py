@@ -2,12 +2,12 @@ from django import forms
 from .models import Customer
 from .models import Address
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.contrib.auth.models import User
+from accounts.models import Account
 
 
 class SignupForm(UserCreationForm):
     class Meta:
-        model = User 
+        model = Account 
         fields = ["username", "password1", "password2"]
 
 class LoginForm(forms.Form):
@@ -26,7 +26,7 @@ class CustomUserCreationForm(forms.ModelForm):
     )
 
     class Meta:
-        model = User
+        model = Account
         fields = ['first_name', 'last_name', 'email']
 
 class CustomUserUpdateForm(UserChangeForm):
@@ -46,7 +46,7 @@ class CustomUserUpdateForm(UserChangeForm):
     )
 
     class Meta:
-        model = User
+        model = Account
         fields = ['username', 'first_name', 'last_name', 'email']
 
 

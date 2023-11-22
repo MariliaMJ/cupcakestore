@@ -10,6 +10,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
+from carts.models import Cart, CartItem
+from carts.views import cart_counter
+
 from .forms import AddressForm, CustomUserCreationForm, CustomerForm, LoginForm, UserCreationForm,CustomUserUpdateForm
 from .models import Cupcake, Customer, ItemOrder, Order
 from store.models import Product
@@ -113,7 +116,9 @@ def order_history(request):
 
 def get_cupcakes(request):
     cupcakes = Product.objects.filter(is_available=True).all()
-    return render(request, "list.html", {"cupcakes": cupcakes})
+    cart_count = cart_counter(request)
+
+    return render(request, "list.html", {"cupcakes": cupcakes, "cart_count": cart_count})
 
 def get_customers_data(request):
     if request.method == "POST":

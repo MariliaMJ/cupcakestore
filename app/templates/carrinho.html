@@ -12,8 +12,17 @@
                 </div>
                 <div class="cupcake-details">
                     <h3>{{ item.cupcake.name }}</h3>
-                    <p>Quantity: {{ item.quantity }}</p>
+                    <p>Quantidade: {{ item.quantity }}</p>
                     <p>Preço: R$ {{ item.total_per_product }}</p>
+                    <div class="quantity-buttons">
+                        <a href="{% url 'remove_from_cart' item.cupcake.id %}" class="quantity-btn"><i class="fas fa-minus"></i></a>
+                        <p>{{ item.quantity }}</p>
+                        <a href="{% url 'add_cart' item.cupcake.id %}" class="quantity-btn"><i class="fas fa-plus"></i></a>
+                    </div>
+                    <a href="{% url 'remove_cart_item' item.cupcake.id %}"
+                    onclick="return confirm('Você gostaria de remover este item do carrinho ?')"
+                    class="btn btn-danger"> Remove</a>
+
                 </div>
             </div>
         {% endfor %}

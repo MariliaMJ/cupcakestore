@@ -20,7 +20,10 @@
             <ul>
                 <li><a href="{% url 'user-account' %}"><i class="fas fa-user"></i> Perfil</a></li>
                 <li><a href="{% url 'order-history' %}"><i class="fas fa-clipboard-list"></i> Pedidos</a></li>
-                <li><a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i> Carrinho</a></li>
+                <div class="cart-badge">
+                    <li><a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a></li>
+                    <span class="badge-count">{{ cart_count }}</span>
+                </div>
             </ul>
         </div>
     </header>
@@ -31,14 +34,14 @@
             <img src="{{ cupcake.image }}">
             <h2 class="cupcake-name">{{ cupcake.name }}</h2>
             <span class="price">R$ {{ cupcake.price }}</span>
-            <a href="{% url 'add-to-cart' cupcake.id %}" class="add-to-cart">Adicionar</a>
+            <a href="{% url 'add_cart' cupcake.id %}" class="add-to-cart">Adicionar</a>
         </section>
         {% endfor %}
     </main>
-    <footer class="footer">
+    <!-- <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2023 Cupcake Store. Todos os direitos reservados.</p>
+            <p>&copy; 2023 Cupcake Lover. Todos os direitos reservados.</p>
         </div>
-    </footer>
+    </footer> -->
 </body>
 </html>

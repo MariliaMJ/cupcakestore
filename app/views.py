@@ -12,6 +12,7 @@ from django.urls import reverse
 
 from .forms import AddressForm, CustomUserCreationForm, CustomerForm, LoginForm, UserCreationForm,CustomUserUpdateForm
 from .models import Cupcake, Customer, ItemOrder, Order
+from store.models import Product
 
 
 def user_signup(request):
@@ -111,51 +112,8 @@ def order_history(request):
         return render(request, 'order_history.html', {'orders': []})
 
 def get_cupcakes(request):
-    cupcakes = Cupcake.objects.all()
+    cupcakes = Product.objects.filter(is_available=True).all()
     return render(request, "list.html", {"cupcakes": cupcakes})
-
-
-def add_to_cart(request, cupcake_id):
-    if request.method == "GET":
-        cupcake_id = str(cupcake_id)
-        if "cart" not in request.session:
-            request.session["cart"] = {}
-
-        cart = request.session["cart"]
-
-        if cupcake_id in cart:
-            cart[cupcake_id] += 1
-        else:
-            cart[cupcake_id] = 1
-
-        request.session["cart"] = cart
-
-        return HttpResponseRedirect(reverse("get-cupcakes"))
-    else:
-        return HttpResponseRedirect(reverse("get-cupcakes"))
-
-
-def view_cart(request):
-    cart = request.session.get("cart", {})
-
-    cart_items = []
-    total = 0
-
-    for cupcake_id, quantity in cart.items():
-        cupcake = get_object_or_404(Cupcake, id=cupcake_id)
-        total = 0
-        cart_items.append(
-            {
-                "cupcake": cupcake,
-                "quantity": quantity,
-                "total_per_product": quantity * cupcake.price,
-            }
-        )
-
-        total += cupcake.price * quantity
-
-    return render(request, "carrinho.html", {"cart_items": cart_items, "total": total})
-
 
 def get_customers_data(request):
     if request.method == "POST":

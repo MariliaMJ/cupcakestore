@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "app",
+    "accounts",
+    "store",
+    "carts",
 ]
 
 # AUTH_USER_MODEL = 'app.User'
@@ -84,6 +87,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "cupcakestore.wsgi.application"
 
+AUTH_USER_MODEL = "accounts.Account"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

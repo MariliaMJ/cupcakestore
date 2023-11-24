@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import uuid
 from django.db import models
 from store.models import Product
@@ -19,3 +20,8 @@ class CartItem(models.Model):
 
     def __str__(self) -> str:
         return self.product.name
+
+@dataclass
+class CartView:
+    cart_items: list
+    total: float

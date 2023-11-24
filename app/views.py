@@ -1,21 +1,23 @@
-from uuid import UUID
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import send_mail
-from django.db import transaction
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.shortcuts import redirect, render
 
-from carts.models import Cart, CartItem
 from carts.views import cart_counter
-
-from .forms import AddressForm, CustomUserCreationForm, CustomerForm, LoginForm, UserCreationForm,CustomUserUpdateForm
-from .models import Cupcake, Customer, ItemOrder, Order
+from checkout.models import Order
 from store.models import Product
+
+from .forms import (
+    AddressForm,
+    CustomerForm,
+    CustomUserUpdateForm,
+    LoginForm,
+    UserCreationForm,
+)
+from .models import Customer
 
 
 def user_signup(request):
@@ -66,12 +68,16 @@ def user_account(request):
             customer_form = CustomerForm(request.POST, instance=customer)
             address_form = AddressForm(request.POST, instance=customer.address)
 
-            if user_form.is_valid() and address_form.is_valid() and customer_form.is_valid():
+            if (
+                user_form.is_valid()
+                and address_form.is_valid()
+                and customer_form.is_valid()
+            ):
                 user_form.save()
                 customer_form.save()
                 address_form.save()
-                messages.success(request, 'Dados atualizados com sucesso!')
-                return redirect('user-account')
+                messages.success(request, "Dados atualizados com sucesso!")
+                return redirect("user-account")
 
         else:
             user_form = CustomUserUpdateForm(instance=request.user)
@@ -91,15 +97,25 @@ def user_account(request):
 
             if customer_form.is_valid() and address_form.is_valid():
                 user = user_form.save(commit=False)
-                customer = customer_form                
+                customer = customer_form
                 address = address_form.save()
                 customer.address = address
                 customer.user = user
                 customer.save()
-                messages.success(request, 'Cadastro realizado com sucesso!')
-                return redirect('user-account')
+                messages.success(request, "Cadastro realizado com sucesso!")
+                return redirect("user-account")
 
-    return render(request, "user_account.html", {"user_data": user_data, "customer_form": customer_form, "customer_user_form": user_form, "address_form": address_form})
+    return render(
+        request,
+        "user_account.html",
+        {
+            "user_data": user_data,
+            "customer_form": customer_form,
+            "customer_user_form": user_form,
+            "address_form": address_form,
+        },
+    )
+
 
 @login_required
 def order_history(request):
@@ -107,18 +123,22 @@ def order_history(request):
         user = request.user
 
         customer = Customer.objects.get(user=user)
-        orders = Order.objects.filter(customer=customer).order_by('-created_at')
-        context = {'orders': orders}
+        orders = Order.objects.filter(customer=customer).order_by("-created_at")
+        context = {"orders": orders}
 
-        return render(request, 'order_history.html', context)
+        return render(request, "order_history.html", context)
     except Customer.DoesNotExist:
-        return render(request, 'order_history.html', {'orders': []})
+        return render(request, "order_history.html", {"orders": []})
+
 
 def get_cupcakes(request):
     cupcakes = Product.objects.filter(is_available=True).all()
     cart_count = cart_counter(request)
 
-    return render(request, "list.html", {"cupcakes": cupcakes, "cart_count": cart_count})
+    return render(
+        request, "list.html", {"cupcakes": cupcakes, "cart_count": cart_count}
+    )
+
 
 def get_customers_data(request):
     if request.method == "POST":
@@ -131,74 +151,6 @@ def get_customers_data(request):
         form = CustomerForm()
 
     return render(request, "coleta_dados_cliente.html", {"form": form})
-
-
-def checkout(request):
-    cart = request.session.get("cart", {})
-    user = request.user if request.user.is_authenticated else None
-
-    if user:
-        customer = Customer.objects.get(user=user)
-
-        # TODO corrigir dado inicial
-        # se o usuário estiver logaod, o form deve vir preenchido com os dados 
-        # cadastrados, caso contrário, 'epossível fazeer o checkout sem login ou 
-        # oferecer a opção de logar 
-        initial_data = {
-            "address-street": customer.address.street,
-            "address-neighborhood": customer.address.neighborhood,
-            "address-city": customer.address.city,
-            "address-state": customer.address.state,
-            "address-zip_code": customer.address.zip_code,
-            "customer-name": customer.user.first_name,
-            "customer-email": customer.user.email,
-            "customer-phone_number": customer.phone_number,
-        }
-        address_form = AddressForm(initial=initial_data, prefix="address")
-        customer_form = CustomUserCreationForm(initial=initial_data, prefix="customer")
-    else:
-        address_form = AddressForm(request.POST, prefix="address")
-        customer_form = CustomUserCreationForm(request.POST, prefix="customer")
-
-    if (
-        request.method == "POST"
-        and address_form.is_valid()
-        and customer_form.is_valid()
-    ):
-        with transaction.atomic():
-            address = address_form.save()
-            customer = customer_form.save(commit=False)
-            cliente = _get_customer(customer)
-            cliente.address = address
-            cliente.save()
-
-            order = Order()
-            order.customer = cliente
-            order.save()
-
-            for cupcake_id, quantity in cart.items():
-                cupcake = Cupcake.objects.get(pk=cupcake_id)
-                value = cupcake.price
-                value_total = cupcake.price * quantity
-                item = ItemOrder(
-                    cupcake=cupcake,
-                    order=order,
-                    quantity=quantity,
-                    value=value,
-                    value_total=value_total,
-                )
-                item.save()
-
-            request.session["cart"] = {}
-        transaction.commit()
-
-        return render(request, "confirmation.html")
-    else:
-        return render(
-            request,
-            "checkout.html",
-            {"address_form": address_form, "customer_form": customer_form},
-        )
 
 
 def reset_password(request):
@@ -228,14 +180,3 @@ def reset_password(request):
         form = PasswordResetForm()
 
     return render(request, "password_reset_done.html", {"form": form})
-
-
-def _get_customer(customerForm: Customer) -> Customer:
-    try:
-        customer = Customer.objects.get(user_email=customerForm.email)
-
-        if not customer:
-            return customerForm
-        return customer
-    except:
-        return customerForm

@@ -1,74 +1,77 @@
-{% load static %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Borel">
-    <title>Checkout</title>
-</head>
-<body>
-    <div class="checkout-bg">
-        <div class="checkout-box">
-            <header class="checkout-header">
-                <h1 class="checkout-header-label">Checkout</h1>
-            </header>
-
-            <form method="post" class="form">
-                {% csrf_token %}
-
-                <div class="form__group">
-                    <h2>Dados Para Entrega</h2>
-
-                    <div class="card">
-                        <label for="{{ address_form.name.id }}">Name</label>
-                        {{ customer_form.name }}
-                        <div class="error-message">{{ customer_form.name.errors }}</div>
-
-                        {{ customer_form.email.label_tag }}
-                        {{ customer_form.email }}
-                        <div class="error-message">{{ customer_form.email.errors }}</div>
-
-                        {{ customer_form.phone_number.label_tag }}
-                        {{ customer_form.phone_number }}
-                        <div class="error-message">{{ customer_form.phone_number.errors }}</div>
+{% block content %}
+<div class="checkout-bg">
+    <div class="checkout-box">
+        <header class="checkout-header">
+            <h1 class="checkout-header-label">Checkout</h1>
+        </header>
+        <div class="checkout-content">
+            <div class="checkout-row">
+                <h2 class="cart-title">Dados Para Entrega</h2>
+                <form method="post" class="form">
+                    {% csrf_token %}
+                    <div class="form__group">
+                        <div class="card">
+                            {{ customer_form.first_name.label_tag }}
+                            {{ customer_form.first_name }}
+                            <div class="error-message">{{ customer_form.name.errors }}</div>
+                            {{ customer_form.email.label_tag }}
+                            {{ customer_form.email }}
+                            <div class="error-message">{{ customer_form.email.errors }}</div>
+                            {{ customer_form.phone_number.label_tag }}
+                            {{ customer_form.phone_number }}
+                            <div class="error-message">{{ customer_form.phone_number.errors }}</div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="form__group">
-                    <h2>Endereço</h2>
-
-                    <div class="card">
-                        <label for="{{ customer_form.street.id }}">Rua</label>
-                        {{ address_form.street }}
-                        <div class="error-message">{{ address_form.street.errors }}</div>
-
-                        {{ address_form.neighborhood.label_tag }}
-                        {{ address_form.neighborhood }}
-                        <div class="error-message">{{ address_form.neighborhood.errors }}</div>
-
-                        {{ address_form.city.label_tag }}
-                        {{ address_form.city }}
-                        <div class="error-message">{{ address_form.city.errors }}</div>
-
-                        {{ address_form.state.label_tag }}
-                        {{ address_form.state }}
-                        <div class="error-message">{{ address_form.state.errors }}</div>
-
-                        {{ address_form.zip_code.label_tag }}
-                        {{ address_form.zip_code }}
-                        <div class="error-message">{{ address_form.zip_code.errors }}</div>
+                    <div class="form__group">
+                        <h2>Endereço</h2>
+                        <div class="card">
+                            <label for="{{ customer_form.street.id }}">Rua</label>
+                            {{ address_form.street }}
+                            <div class="error-message">{{ address_form.street.errors }}</div>
+                            {{ address_form.neighborhood.label_tag }}
+                            {{ address_form.neighborhood }}
+                            <div class="error-message">{{ address_form.neighborhood.errors }}</div>
+                            {{ address_form.city.label_tag }}
+                            {{ address_form.city }}
+                            <div class="error-message">{{ address_form.city.errors }}</div>
+                            {{ address_form.state.label_tag }}
+                            {{ address_form.state }}
+                            <div class="error-message">{{ address_form.state.errors }}</div>
+                            {{ address_form.zip_code.label_tag }}
+                            {{ address_form.zip_code }}
+                            <div class="error-message">{{ address_form.zip_code.errors }}</div>
+                            
                         
-                    
+                        </div>
                     </div>
+                    <div>
+                    <button type="submit" class="finish-button">Cadastrar e Finalizar Pedido</a>
+                    </div>
+                </form>
+            </div>
+            <div class="checkout-row">
+                <h2 class="cart-title">Seu Pedido</h2>
+                <table class="checkout-items">
+                    <tbody>
+                        {% for item in cart_view.cart_items %}
+                            <tr>
+                                <td>{{ item.cupcake.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>R$ {{ item.total_per_product }}</td>    
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr class="checkout-divider">
+
+                <div class="checkout-total">
+                    <p>Total: R$ {{ cart_view.total }}</p>
                 </div>
-                <button type="submit" class="finish-button">Cadastrar</a>
-                </div>
-            </form>
+            </div>
         </div>
+
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

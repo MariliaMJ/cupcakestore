@@ -14,20 +14,20 @@ class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
 
-class CustomUserCreationForm(forms.ModelForm):
+class CustomUserCreationForm(UserChangeForm):
     first_name = forms.CharField(
         widget=forms.TextInput(attrs={"class": "input-field"}), label="Nome"
-    )
-    last_name = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "input-field"}), label="Sobrenome"
     )
     email = forms.EmailField(
         widget=forms.TextInput(attrs={"class": "input-field"}), label="Email"
     )
+    phone_number = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Telefone"
+    )
 
     class Meta:
         model = Account
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'email', 'phone_number']
 
 class CustomUserUpdateForm(UserChangeForm):
     password = None 

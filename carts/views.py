@@ -1,8 +1,13 @@
 from django.http import HttpResponseRedirect
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from store.models import Product
 from carts.models import Cart, CartItem
+from app.forms import AddressForm, CustomUserCreationForm
+from app.models import Cupcake, Customer
+from checkout.models import ItemOrder, Order
+from store.models import Product
 import uuid
 
 # Create your views here.
@@ -92,20 +97,17 @@ def remove_from_cart(request, product_id):
 def cart_counter(request):
     cart_count = 0
 
-    if "admin" in request.path:
-        return {}
-    else:
-        try:
-            cart = Cart.objects.get(cart_id=_cart_id(request))
+    try:
+        cart = Cart.objects.get(cart_id=_cart_id(request))
 
-            if request.user.is_authenticated:
-                cart_items = CartItem.objects.filter(cart=cart).all()
-            else:
-                cart_items = CartItem.objects.all().filter(cart=cart[:1])
-            for cart_item in cart_items:
-                cart_count += cart_item.quantity
-        except Cart.DoesNotExist:
-            cart_count = 0
+        if request.user.is_authenticated:
+            cart_items = CartItem.objects.filter(cart=cart).all()
+        else:
+            cart_items = CartItem.objects.filter(cart=cart).all()
+        for cart_item in cart_items:
+            cart_count += cart_item.quantity
+    except Cart.DoesNotExist:
+        return cart_count
     
     return cart_count
 
@@ -120,3 +122,4 @@ def remove_cart_item(request, product_id):  # remove o item do carrinho
         cart_item = CartItem.objects.get(product=product, cart=cart)
     cart_item.delete()
     return HttpResponseRedirect(reverse("cart"))
+

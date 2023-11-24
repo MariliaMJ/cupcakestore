@@ -388,7 +388,7 @@ p {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
     background-color: #ffcccc; 
 }
 
@@ -397,11 +397,79 @@ p {
     border-radius: 10px; 
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-    max-width: 400px;
+    max-width: 90%;
     width: 100%;
     height: auto;
     text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
+
+.checkout-content {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
+
+.checkout-row {
+    width: 100%;
+}
+
+.checkout-details {
+    flex: 3;
+    display: flex;
+    flex-direction: left;
+}
+
+
+.checkout-details h3{
+    padding: 10px;
+}
+
+.checkout-details p{
+    padding: 10px;
+}
+
+
+.checkout-items th, .checkout-items td {
+    padding: 8px;
+    text-align: left;
+}
+
+
+.checkout-items {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    display: flex;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);
+    flex-direction: column;
+}
+
+
+.checkout-item {
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
+
+
+.checkout-divider {
+    border-top: 1px solid #ddd;
+    margin-top: 10px;
+}
+
+.checkout-total {
+    text-align: right;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
 
 label {
     display: block;

@@ -23,10 +23,10 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("cupcakes/", views.get_cupcakes, name="get-cupcakes"),
-    path("checkout/", views.checkout, name="checkout"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("signup/", views.user_signup, name="signup"),
     path("user-account/", views.user_account, name="user-account"),
     path("order-history/", views.order_history, name="order-history"),
     path("cart/", include("carts.urls")),
+    path("checkout/", include("checkout.urls")),
 ]

@@ -3,7 +3,7 @@ from django.utils import timezone
 import uuid
 from django.db import models
 
-from app.models import Customer
+from customer.models import Customer
 from store.models import Product
 
 

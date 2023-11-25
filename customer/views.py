@@ -130,15 +130,6 @@ def order_history(request):
         return render(request, "order_history.html", {"orders": []})
 
 
-def get_cupcakes(request):
-    cupcakes = Product.objects.filter(is_available=True).all()
-    cart_count = cart_counter(request)
-
-    return render(
-        request, "list.html", {"cupcakes": cupcakes, "cart_count": cart_count}
-    )
-
-
 def get_customers_data(request):
     if request.method == "POST":
         form = CustomerForm(request.POST)

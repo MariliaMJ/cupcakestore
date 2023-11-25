@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "store",
     "carts",
     "checkout",
+    "customer"
 ]
 
 # AUTH_USER_MODEL = 'app.User'

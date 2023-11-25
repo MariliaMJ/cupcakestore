@@ -2,8 +2,8 @@ from django.db import transaction
 from django.shortcuts import render
 from accounts.models import Account
 
-from app.forms import AddressForm, CustomUserCreationForm
-from app.models import Customer
+from customer.forms import AddressForm, CustomUserCreationForm
+from customer.models import Customer
 from carts.models import Cart, CartItem
 from checkout.controller import get_cart
 from checkout.models import ItemOrder, Order

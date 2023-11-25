@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from accounts.models import Account
 
@@ -10,8 +11,14 @@ from checkout.models import ItemOrder, Order
 from store.models import Product
 
 
-# Create your views here.
-def checkout(request):
+"""Does the whole process of checkout. Checks the cart and collects the user's 
+information, save all of them and completes and order, cleaning the cart.
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+"""
+def checkout(request: HttpRequest) -> HttpResponse:
     cart_id = request.session.get("cart_id", {})
     user = request.user if request.user.is_authenticated else None
 
@@ -87,7 +94,14 @@ def checkout(request):
             },
         )
 
+"""Does the whole process of checkout. Checks the cart and collects the user's 
+information, save all of them and completes and order, cleaning the cart.
+Parameters
+----------
+user : Account. The entity of a person registration in the website, based on django 
+preset account registration
 
+"""
 def _get_customer(user: Account) -> Customer:
     try:
         return Customer.objects.get(user=user)

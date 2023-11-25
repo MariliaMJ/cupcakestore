@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import send_mail
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
 from carts.views import cart_counter
@@ -18,8 +19,13 @@ from .forms import (
 )
 from .models import Customer
 
-
-def user_signup(request):
+"""Signs a user up, collecting a username and a password
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+"""
+def user_signup(request: HttpRequest) -> HttpResponse | UserCreationForm:
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -29,8 +35,13 @@ def user_signup(request):
         form = UserCreationForm()
     return render(request, "signup.html", {"form": form})
 
-
-def login(request):
+"""Logs a user in. 
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+"""
+def login(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -44,7 +55,13 @@ def login(request):
         form = LoginForm()
     return render(request, "login.html", {"form": form})
 
-
+"""Shows a form of a user saved data, allowing them to edit it or completed
+unfilled information. It's only possible to check this being logged in.
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+"""
 @login_required
 def user_account(request):
     try:
@@ -115,9 +132,16 @@ def user_account(request):
         },
     )
 
+"""Renders a list of requested orders realted to a user. Must be logged in to see
+this page.
 
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+"""
 @login_required
-def order_history(request):
+def order_history(request: HttpRequest) -> HttpResponse:
     try:
         user = request.user
 
@@ -129,8 +153,15 @@ def order_history(request):
     except Customer.DoesNotExist:
         return render(request, "order_history.html", {"orders": []})
 
+"""Renders a form to collect a customer's data in case this data was not yet
+collected
 
-def get_customers_data(request):
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+"""
+def get_customers_data(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = CustomerForm(request.POST)
         if form.is_valid():
@@ -142,8 +173,14 @@ def get_customers_data(request):
 
     return render(request, "coleta_dados_cliente.html", {"form": form})
 
+"""Resets the password of a user account
 
-def reset_password(request):
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+"""
+def reset_password(request: HttpRequest) -> HttpResponse | PasswordResetForm:
     if request.method == "POST":
         form = PasswordResetForm(request.POST)
         if form.is_valid():

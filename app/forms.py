@@ -7,12 +7,14 @@ from accounts.models import Account
 
 class SignupForm(UserCreationForm):
     class Meta:
-        model = Account 
+        model = Account
         fields = ["username", "password1", "password2"]
+
 
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+
 
 class CustomUserCreationForm(UserChangeForm):
     first_name = forms.CharField(
@@ -27,10 +29,11 @@ class CustomUserCreationForm(UserChangeForm):
 
     class Meta:
         model = Account
-        fields = ['first_name', 'email', 'phone_number']
+        fields = ["first_name", "email", "phone_number"]
+
 
 class CustomUserUpdateForm(UserChangeForm):
-    password = None 
+    password = None
 
     username = forms.CharField(
         widget=forms.TextInput(attrs={"class": "input-field"}), label="Usuario"
@@ -47,7 +50,7 @@ class CustomUserUpdateForm(UserChangeForm):
 
     class Meta:
         model = Account
-        fields = ['username', 'first_name', 'last_name', 'email']
+        fields = ["username", "first_name", "last_name", "email"]
 
 
 class CustomerForm(forms.ModelForm):

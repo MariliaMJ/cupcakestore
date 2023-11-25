@@ -29,18 +29,20 @@ def checkout(request):
                 "customer-email": customer.user.email,
                 "customer-phone_number": customer.phone_number,
             }
-            address_form = AddressForm(initial=initial_data, prefix="address", instance=customer.address)            
+            address_form = AddressForm(
+                initial=initial_data, prefix="address", instance=customer.address
+            )
         except Customer.DoesNotExist:
             address_form = AddressForm(prefix="address")
-            
+
     else:
         address_form = AddressForm(prefix="address")
         customer_form = CustomUserCreationForm(prefix="customer")
-    if (
-        request.method == "POST"
-    ):
+    if request.method == "POST":
         address_form = AddressForm(request.POST, prefix="address")
-        customer_form = CustomUserCreationForm(request.POST, prefix="customer", instance=user)
+        customer_form = CustomUserCreationForm(
+            request.POST, prefix="customer", instance=user
+        )
 
         with transaction.atomic():
             address_form.is_valid()
@@ -53,7 +55,6 @@ def checkout(request):
             order = Order()
             order.customer = customer
             order.save()
-            
 
             cart = Cart.objects.get(cart_id=cart_id)
             cart_items = CartItem.objects.filter(cart=cart).all()
@@ -79,12 +80,17 @@ def checkout(request):
         return render(
             request,
             "checkout.html",
-            {"address_form": address_form, "customer_form": customer_form, "cart_view": cart_view},
+            {
+                "address_form": address_form,
+                "customer_form": customer_form,
+                "cart_view": cart_view,
+            },
         )
+
 
 def _get_customer(user: Account) -> Customer:
     try:
-        return Customer.objects.get(user=user)         
+        return Customer.objects.get(user=user)
     except Customer.DoesNotExist:
         customer = Customer(user=user)
         customer.save()

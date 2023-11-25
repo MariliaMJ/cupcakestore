@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from store.models import Product
@@ -6,10 +6,15 @@ from carts.models import Cart, CartItem
 from store.models import Product
 import uuid
 
-# Create your views here.
 
+"""Renders what's in a customer's cart and the total
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 
-def cart(request):
+"""
+def cart(request: HttpRequest) -> HttpResponse:
     cart_id = _cart_id(request)
     try:
         cart = Cart.objects.get(cart_id=cart_id)
@@ -36,8 +41,14 @@ def cart(request):
         request, "carrinho.html", {"cart_items": cart_items_render, "total": total}
     )
 
+"""Retrieves a cart_id from a session
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 
-def _cart_id(request):
+"""
+def _cart_id(request: HttpRequest) -> str:
     cart_id = request.session.get("cart_id", None)
     if not cart_id:
         cart_id = str(uuid.uuid4())
@@ -45,7 +56,15 @@ def _cart_id(request):
     return cart_id
 
 
-def add_to_cart(request, product_id):
+"""Adds a given product to the cart
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+product_id: id from a registered product
+
+"""
+def add_to_cart(request: HttpRequest, product_id: uuid) -> HttpResponseRedirect:
     if request.method == "GET":
         product_id = str(product_id)
         product = Product.objects.get(id=product_id)
@@ -73,8 +92,15 @@ def add_to_cart(request, product_id):
     else:
         return HttpResponseRedirect(reverse("cart"))
 
+"""Remove one quantity from a certain product in the cart
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+product_id: id from a registered product
 
-def remove_from_cart(request, product_id):
+"""
+def remove_from_cart(request: HttpRequest, product_id: uuid) -> HttpResponseRedirect:
     product = get_object_or_404(Product, id=product_id)
     cart_id = request.session.get("cart_id", None)
     try:
@@ -92,8 +118,13 @@ def remove_from_cart(request, product_id):
         pass
     return HttpResponseRedirect(reverse("cart"))
 
-
-def cart_counter(request):
+"""Counts how many products are there in the cart
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+"""
+def cart_counter(request: HttpRequest) -> int:
     cart_count = 0
 
     try:
@@ -110,7 +141,14 @@ def cart_counter(request):
 
     return cart_count
 
+"""Remove a whole product from the cart
+Parameters
+----------
+request : HttpRequest
+access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
+product_id: id from a registered product
 
+"""
 def remove_cart_item(request, product_id):  # remove o item do carrinho
     product = get_object_or_404(Product, id=product_id)
     cart_id = request.session.get("cart_id", None)

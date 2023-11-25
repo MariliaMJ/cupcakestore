@@ -1,12 +1,8 @@
 from django.http import HttpResponseRedirect
-from django.db import transaction
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from store.models import Product
 from carts.models import Cart, CartItem
-from app.forms import AddressForm, CustomUserCreationForm
-from app.models import Cupcake, Customer
-from checkout.models import ItemOrder, Order
 from store.models import Product
 import uuid
 

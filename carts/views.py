@@ -12,16 +12,15 @@ import uuid
 
 # Create your views here.
 
+
 def cart(request):
     cart_id = _cart_id(request)
     try:
         cart = Cart.objects.get(cart_id=cart_id)
     except Cart.DoesNotExist:
-        cart = Cart.objects.create(
-            cart_id = cart_id
-        )
+        cart = Cart.objects.create(cart_id=cart_id)
         cart.save()
-    
+
     cart_items = CartItem.objects.filter(cart=cart).all()
     cart_items_render = []
     total = 0
@@ -37,7 +36,10 @@ def cart(request):
 
         total += item.product.price * item.quantity
 
-    return render(request, "carrinho.html", {"cart_items": cart_items_render, "total": total})
+    return render(
+        request, "carrinho.html", {"cart_items": cart_items_render, "total": total}
+    )
+
 
 def _cart_id(request):
     cart_id = request.session.get("cart_id", None)
@@ -45,6 +47,7 @@ def _cart_id(request):
         cart_id = str(uuid.uuid4())
         request.session["cart_id"] = cart_id
     return cart_id
+
 
 def add_to_cart(request, product_id):
     if request.method == "GET":
@@ -55,9 +58,7 @@ def add_to_cart(request, product_id):
         try:
             cart = Cart.objects.get(cart_id=cart_id)
         except Cart.DoesNotExist:
-            cart = Cart.objects.create(
-                cart_id = cart_id
-            )
+            cart = Cart.objects.create(cart_id=cart_id)
             cart.save()
 
         try:
@@ -76,13 +77,14 @@ def add_to_cart(request, product_id):
     else:
         return HttpResponseRedirect(reverse("cart"))
 
+
 def remove_from_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart_id = request.session.get("cart_id", None)
     try:
         if request.user.is_authenticated:
             cart = Cart.objects.get(cart_id=cart_id)
-            cart_item = CartItem.objects.get(product=product, cart=cart)   
+            cart_item = CartItem.objects.get(product=product, cart=cart)
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
         if cart_item.quantity > 1:
@@ -93,6 +95,7 @@ def remove_from_cart(request, product_id):
     except Exception as e:
         pass
     return HttpResponseRedirect(reverse("cart"))
+
 
 def cart_counter(request):
     cart_count = 0
@@ -108,8 +111,9 @@ def cart_counter(request):
             cart_count += cart_item.quantity
     except Cart.DoesNotExist:
         return cart_count
-    
+
     return cart_count
+
 
 def remove_cart_item(request, product_id):  # remove o item do carrinho
     product = get_object_or_404(Product, id=product_id)
@@ -122,4 +126,3 @@ def remove_cart_item(request, product_id):  # remove o item do carrinho
         cart_item = CartItem.objects.get(product=product, cart=cart)
     cart_item.delete()
     return HttpResponseRedirect(reverse("cart"))
-

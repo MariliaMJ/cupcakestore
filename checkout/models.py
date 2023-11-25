@@ -6,6 +6,7 @@ from django.db import models
 from app.models import Customer
 from store.models import Product
 
+
 # Create your models here.
 class OrderStatus(Enum):
     PENDENTE = "Pendente"
@@ -26,9 +27,7 @@ class ItemOrder(models.Model):
 
 
 class Order(models.Model):
-    order_id = models.UUIDField(
-        unique=True, default=uuid.uuid4, editable=False
-    )
+    order_id = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     order_number = models.AutoField(primary_key=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     data = models.DateTimeField(default=timezone.now)

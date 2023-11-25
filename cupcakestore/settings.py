@@ -27,13 +27,13 @@ SECRET_KEY = "django-insecure-39##80mfqlcqg!4uehs!t)eo9wz*2#m8j3im_z51r(zr_8h*56
 DEBUG = True
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
     }
 }
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '::1']
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "::1"]
 
 
 # Application definition
@@ -49,13 +49,13 @@ INSTALLED_APPS = [
     "accounts",
     "store",
     "carts",
-    "checkout"
+    "checkout",
 ]
 
 # AUTH_USER_MODEL = 'app.User'
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 MIDDLEWARE = [
@@ -142,14 +142,16 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use o banco de dados para armazenar sessões
+SESSION_ENGINE = (
+    "django.contrib.sessions.backends.db"  # Use o banco de dados para armazenar sessões
+)
 SESSION_COOKIE_SECURE = False  # Defina como True para HTTPS
 
-LOGIN_REDIRECT_URL = '/cupcakes'
+LOGIN_REDIRECT_URL = "/cupcakes"
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = str(os.getenv('EMAIL_USER'))
-EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_PASSWORD'))
+EMAIL_HOST_USER = str(os.getenv("EMAIL_USER"))
+EMAIL_HOST_PASSWORD = str(os.getenv("EMAIL_PASSWORD"))

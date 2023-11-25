@@ -6,7 +6,7 @@ def get_cart(cart_id):
         cart = Cart.objects.get(cart_id=cart_id)
     except Cart.DoesNotExist as e:
         raise e
-    
+
     cart_items = CartItem.objects.filter(cart=cart).all()
     cart_items_render = []
     total = 0

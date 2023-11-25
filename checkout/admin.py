@@ -4,6 +4,7 @@ from checkout.models import ItemOrder, Order
 
 # Register your models here.
 
+
 class ItemOrderInline(admin.TabularInline):
     model = ItemOrder
     extra = 0

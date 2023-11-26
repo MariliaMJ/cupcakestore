@@ -69,7 +69,7 @@ def add_to_cart(request: HttpRequest, product_id: uuid) -> HttpResponseRedirect:
         product_id = str(product_id)
         product = Product.objects.get(id=product_id)
 
-        cart_id = _cart_id(request)
+        cart_id = request.session.get("cart_id", None)
         try:
             cart = Cart.objects.get(cart_id=cart_id)
         except Cart.DoesNotExist:
@@ -79,14 +79,14 @@ def add_to_cart(request: HttpRequest, product_id: uuid) -> HttpResponseRedirect:
         try:
             cart_item = CartItem.objects.get(product=product, cart=cart)
             cart_item.quantity += 1
-            cart_item.save()
         except CartItem.DoesNotExist:
             cart_item = CartItem.objects.create(
                 product=product,
                 cart=cart,
                 quantity=1,
             )
-            cart_item.save()
+
+        cart_item.save()
 
         return HttpResponseRedirect(reverse("cart"))
     else:
@@ -104,11 +104,10 @@ def remove_from_cart(request: HttpRequest, product_id: uuid) -> HttpResponseRedi
     product = get_object_or_404(Product, id=product_id)
     cart_id = request.session.get("cart_id", None)
     try:
-        if request.user.is_authenticated:
-            cart = Cart.objects.get(cart_id=cart_id)
-            cart_item = CartItem.objects.get(product=product, cart=cart)
-        else:
-            cart = Cart.objects.get(cart_id=_cart_id(request))
+        
+        cart = Cart.objects.get(cart_id=cart_id)
+        cart_item = CartItem.objects.get(product=product, cart=cart)
+        
         if cart_item.quantity > 1:
             cart_item.quantity -= 1
             cart_item.save()

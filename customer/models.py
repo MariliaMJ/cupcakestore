@@ -31,4 +31,4 @@ class Customer(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.user.first_name
+        return str(self.user.email)

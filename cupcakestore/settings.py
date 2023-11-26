@@ -74,7 +74,7 @@ ROOT_URLCONF = "cupcakestore.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ['app/templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -149,10 +149,13 @@ SESSION_ENGINE = (
 SESSION_COOKIE_SECURE = False  # Defina como True para HTTPS
 
 LOGIN_REDIRECT_URL = "/cupcakes"
+LOGOUT_REDIRECT_URL = "/cupcakes"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = str(os.getenv("EMAIL_USER"))
-EMAIL_HOST_PASSWORD = str(os.getenv("EMAIL_PASSWORD"))
+EMAIL_HOST_USER = "cupcakesloverstore@gmail.com" #str(os.getenv("EMAIL_USER"))
+EMAIL_HOST_PASSWORD = "wxpbjzofxhfberdb" #str(os.getenv("EMAIL_PASSWORD"))
+# cupcakesloverstore@gmail.com
+# Mama123#cupcakes

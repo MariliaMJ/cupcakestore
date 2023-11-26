@@ -158,4 +158,4 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "cupcakesloverstore@gmail.com" #str(os.getenv("EMAIL_USER"))
 EMAIL_HOST_PASSWORD = "wxpbjzofxhfberdb" #str(os.getenv("EMAIL_PASSWORD"))
 # cupcakesloverstore@gmail.com
-# Mama123#cupcakes
+# Mama123#cupcakes M4r1l14#heroku

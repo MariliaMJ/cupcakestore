@@ -4,7 +4,7 @@
 {% block content %}
     <h1 class="cart-title">Seu Carrinho</h1>
     <div class="cart-items">
-        {% for item in cart_items|dictsort:"cupcake.name" %}
+        {% for item in cart_items %}
             <!-- HTML -->
             <div class="cart-item">
                 <div class="cupcake-image">

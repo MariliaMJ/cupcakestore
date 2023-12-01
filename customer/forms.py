@@ -24,6 +24,9 @@ class CustomUserCreationForm(UserChangeForm):
     first_name = forms.CharField(
         widget=forms.TextInput(attrs={"class": "input-field"}), label="Nome"
     )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Sobrenome"
+    )
     email = forms.EmailField(
         widget=forms.TextInput(attrs={"class": "input-field"}), label="Email"
     )
@@ -33,7 +36,7 @@ class CustomUserCreationForm(UserChangeForm):
 
     class Meta:
         model = Account
-        fields = ["first_name", "email", "phone_number"]
+        fields = ["first_name", "last_name", "email", "phone_number"]
 
 
 class CustomUserUpdateForm(UserChangeForm):

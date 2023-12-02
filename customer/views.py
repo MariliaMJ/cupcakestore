@@ -24,8 +24,6 @@ Parameters
 request : HttpRequest
 access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 """
-
-
 def user_signup(request: HttpRequest) -> HttpResponse | SignupForm:
     if request.method == "POST":
         form = SignupForm(request.POST)
@@ -43,8 +41,6 @@ Parameters
 request : HttpRequest
 access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 """
-
-
 def login(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -71,8 +67,6 @@ Parameters
 request : HttpRequest
 access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 """
-
-
 @login_required
 def user_account(request):
     try:
@@ -92,41 +86,42 @@ def user_account(request):
 
         if request.method == "POST":
             user_form = CustomUserUpdateForm(request.POST, instance=request.user)
-            customer_form = CustomerForm(request.POST, instance=customer)
             address_form = AddressForm(request.POST, instance=customer.address)
 
-            if (
-                user_form.is_valid()
-                and address_form.is_valid()
-                and customer_form.is_valid()
-            ):
+            if user_form.is_valid() and address_form.is_valid():
                 user_form.save()
-                customer_form.save()
                 address_form.save()
                 messages.success(request, "Dados atualizados com sucesso!")
                 return redirect("user-account")
 
         else:
             user_form = CustomUserUpdateForm(instance=request.user)
-            customer_form = CustomerForm(instance=customer)
             address_form = AddressForm(instance=customer.address)
     except Customer.DoesNotExist:
-        user_data = None
-        user_form = CustomUserUpdateForm()
-        customer_form = CustomerForm()
+        user_data = {
+            "name": request.user.first_name,
+            "email": request.user.email,
+            "phone_number": "",
+            "address": {
+                "street": "",
+                "neighborhood": "",
+                "city": "",
+                "state": "",
+                "zip_code": "",
+            },
+        }
+        user_form = CustomUserUpdateForm(instance=request.user)
         address_form = AddressForm()
 
         if request.method == "POST":
             user_form = CustomUserUpdateForm(request.POST)
-            customer_form = CustomerForm(request.POST)
             address_form = AddressForm(request.POST)
 
-            if customer_form.is_valid() and address_form.is_valid():
+            if user_form.is_valid() and address_form.is_valid():
                 user = user_form.save(commit=False)
-                customer = customer_form
+                customer = Customer.objects.create(user=user)
                 address = address_form.save()
                 customer.address = address
-                customer.user = user
                 customer.save()
                 messages.success(request, "Cadastro realizado com sucesso!")
                 return redirect("user-account")
@@ -134,12 +129,7 @@ def user_account(request):
     return render(
         request,
         "user_account.html",
-        {
-            "user_data": user_data,
-            "customer_form": customer_form,
-            "customer_user_form": user_form,
-            "address_form": address_form,
-        },
+        {"user_data": user_data, "user_form": user_form, "address_form": address_form},
     )
 
 

@@ -71,60 +71,42 @@ access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 def user_account(request):
     try:
         customer = Customer.objects.get(user=request.user)
-        user_data = {
-            "name": request.user.first_name,
-            "email": request.user.email,
-            "phone_number": customer.phone_number,
-            "address": {
-                "street": customer.address.street,
-                "neighborhood": customer.address.neighborhood,
-                "city": customer.address.city,
-                "state": customer.address.state,
-                "zip_code": customer.address.zip_code,
-            },
-        }
-
-        if request.method == "POST":
-            user_form = CustomUserUpdateForm(request.POST, instance=request.user)
-            address_form = AddressForm(request.POST, instance=customer.address)
-
-            if user_form.is_valid() and address_form.is_valid():
-                user_form.save()
-                address_form.save()
-                messages.success(request, "Dados atualizados com sucesso!")
-                return redirect("user-account")
-
-        else:
-            user_form = CustomUserUpdateForm(instance=request.user)
-            address_form = AddressForm(instance=customer.address)
     except Customer.DoesNotExist:
-        user_data = {
-            "name": request.user.first_name,
-            "email": request.user.email,
-            "phone_number": "",
-            "address": {
-                "street": "",
-                "neighborhood": "",
-                "city": "",
-                "state": "",
-                "zip_code": "",
-            },
-        }
+        customer = None
+
+    if request.method == "POST":
+        user_form = CustomUserUpdateForm(request.POST, instance=request.user)
+        address_form = AddressForm(request.POST, instance=customer.address if customer else None)
+
+        if user_form.is_valid() and address_form.is_valid():
+            user_form.save()
+            
+            if not customer:
+                customer = Customer.objects.create(user=request.user)
+
+            address = address_form.save(commit=False)
+            address.save()
+            customer.address = address
+            customer.save()
+            messages.success(request, "Dados atualizados com sucesso!")
+            return redirect("user-account")
+
+    else:
         user_form = CustomUserUpdateForm(instance=request.user)
-        address_form = AddressForm()
+        address_form = AddressForm(instance=customer.address if customer else None)
 
-        if request.method == "POST":
-            user_form = CustomUserUpdateForm(request.POST)
-            address_form = AddressForm(request.POST)
-
-            if user_form.is_valid() and address_form.is_valid():
-                user = user_form.save(commit=False)
-                customer = Customer.objects.create(user=user)
-                address = address_form.save()
-                customer.address = address
-                customer.save()
-                messages.success(request, "Cadastro realizado com sucesso!")
-                return redirect("user-account")
+    user_data = {
+        "name": request.user.first_name,
+        "email": request.user.email,
+        "phone_number": customer.phone_number if customer else "",
+        "address": {
+            "street": customer.address.street if customer and customer.address else "",
+            "neighborhood": customer.address.neighborhood if customer and customer.address else "",
+            "city": customer.address.city if customer and customer.address else "",
+            "state": customer.address.state if customer and customer.address else "",
+            "zip_code": customer.address.zip_code if customer and customer.address else "",
+        },
+    }
 
     return render(
         request,

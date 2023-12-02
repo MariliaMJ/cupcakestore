@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import SetPasswordForm
+from django.forms import ValidationError
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
@@ -23,6 +24,8 @@ Parameters
 request : HttpRequest
 access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 """
+
+
 def user_signup(request: HttpRequest) -> HttpResponse | SignupForm:
     if request.method == "POST":
         form = SignupForm(request.POST)
@@ -33,12 +36,15 @@ def user_signup(request: HttpRequest) -> HttpResponse | SignupForm:
         form = SignupForm()
     return render(request, "signup.html", {"form": form})
 
+
 """Logs a user in. 
 Parameters
 ----------
 request : HttpRequest
 access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 """
+
+
 def login(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -53,8 +59,10 @@ def login(request: HttpRequest) -> HttpResponse:
         form = LoginForm()
     return render(request, "login.html", {"form": form})
 
+
 def logout(request):
-    return render("logged_out.html") 
+    return render("logged_out.html")
+
 
 """Shows a form of a user saved data, allowing them to edit it or completed
 unfilled information. It's only possible to check this being logged in.
@@ -63,21 +71,23 @@ Parameters
 request : HttpRequest
 access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 """
+
+
 @login_required
 def user_account(request):
     try:
         customer = Customer.objects.get(user=request.user)
         user_data = {
-        "name": request.user.first_name,
-        "email": request.user.email,
-        "phone_number": customer.phone_number,
-        "address": {
-            "street": customer.address.street,
-            "neighborhood": customer.address.neighborhood,
-            "city": customer.address.city,
-            "state": customer.address.state,
-            "zip_code": customer.address.zip_code,
-        },
+            "name": request.user.first_name,
+            "email": request.user.email,
+            "phone_number": customer.phone_number,
+            "address": {
+                "street": customer.address.street,
+                "neighborhood": customer.address.neighborhood,
+                "city": customer.address.city,
+                "state": customer.address.state,
+                "zip_code": customer.address.zip_code,
+            },
         }
 
         if request.method == "POST":
@@ -132,6 +142,7 @@ def user_account(request):
         },
     )
 
+
 """Renders a list of requested orders realted to a user. Must be logged in to see
 this page.
 
@@ -140,6 +151,8 @@ Parameters
 request : HttpRequest
 access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 """
+
+
 @login_required
 def order_history(request: HttpRequest) -> HttpResponse:
     try:
@@ -153,6 +166,7 @@ def order_history(request: HttpRequest) -> HttpResponse:
     except Customer.DoesNotExist:
         return render(request, "order_history.html", {"orders": []})
 
+
 """Renders a form to collect a customer's data in case this data was not yet
 collected
 
@@ -161,6 +175,8 @@ Parameters
 request : HttpRequest
 access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 """
+
+
 def get_customers_data(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = CustomerForm(request.POST)
@@ -173,6 +189,7 @@ def get_customers_data(request: HttpRequest) -> HttpResponse:
 
     return render(request, "coleta_dados_cliente.html", {"form": form})
 
+
 """Resets the password of a user account
 
 Parameters
@@ -180,12 +197,14 @@ Parameters
 request : HttpRequest
 access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 """
+
+
 def password_reset(request: HttpRequest) -> HttpResponse | SetPasswordForm:
     breakpoint()
     if request.method == "POST":
         form = SetPasswordForm(request.POST)
         if form.is_valid():
-            password = form.cleaned_data['password']
+            password = form.cleaned_data["password"]
             request.user.password = make_password(password)
             request.user.save()
 

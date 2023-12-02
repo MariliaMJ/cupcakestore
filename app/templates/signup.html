@@ -6,7 +6,24 @@
     <h1 class="signup-title">Signup</h1>
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.first_name.label_tag }}
+        {{ form.first_name }}
+        <div class="error-message">{{ form.first_name.errors }}</div>
+        {{ form.last_name.label_tag }}
+        {{ form.last_name }}
+        <div class="error-message">{{ form.last_name.errors }}</div>
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        <div class="error-message">{{ form.email.errors }}</div>
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        <div class="error-message">{{ form.username.errors }}</div>
+        {{ form.password1.label_tag }}
+        {{ form.password1 }}
+        <div class="error-message">{{ form.password1.errors }}</div>
+        {{ form.password2.label_tag }}
+        {{ form.password2 }}
+        <div class="error-message">{{ form.password2.errors }}</div>
         <button type="submit">Criar</button>
         <a href="{% url 'login' %}">Já possui uma conta?</a>
     </form>

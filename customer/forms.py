@@ -6,13 +6,31 @@ from accounts.models import Account
 
 
 class SignupForm(UserCreationForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={"class": "input-field"}), label="Nome")
-    last_name = forms.CharField(widget=forms.TextInput(attrs={"class": "input-field"}), label="Sobrenome")
-    username = forms.CharField(widget=forms.TextInput(attrs={"class": "input-field"}), label="Usuario")
-    email = forms.EmailField(widget=forms.TextInput(attrs={"class": "input-field"}), label="Email")
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Nome"
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Sobrenome"
+    )
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"}), label="Usuario"
+    )
+    email = forms.EmailField(
+        widget=forms.TextInput(attrs={"class": "input-field"}),
+        label="Email",
+    )
+
     class Meta:
         model = Account
-        fields = ["first_name", "last_name", "email", "username", "password1", "password2"]
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "username",
+            "password1",
+            "password2",
+        ]
+
 
 
 class LoginForm(forms.Form):

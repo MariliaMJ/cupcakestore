@@ -42,8 +42,7 @@ class Account(AbstractBaseUser):
     last_name = models.CharField(max_length=50)
     username = models.CharField(
         max_length=50,
-        unique=True,
-        error_messages={"unique": "Já existe uma conta cadastrada com este usuário "},
+        null=True,
     )
     email = models.EmailField(
         max_length=100,

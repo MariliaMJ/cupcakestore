@@ -8,7 +8,6 @@ from customer.models import Customer
 from carts.models import Cart, CartItem
 from checkout.controller import get_cart
 from checkout.models import ItemOrder, Order
-from store.models import Product
 
 
 """Does the whole process of checkout. Checks the cart and collects the user's 
@@ -55,7 +54,8 @@ def checkout(request: HttpRequest) -> HttpResponse:
             address_form.is_valid()
             customer_form.is_valid()
             address = address_form.save()
-            user = customer_form.save()
+            user = _get_account(customer_form)
+            
             customer = _get_customer(user)
             customer.address = address
             customer.save()
@@ -109,3 +109,9 @@ def _get_customer(user: Account) -> Customer:
         customer = Customer(user=user)
         customer.save()
         return customer
+
+def _get_account(user: CustomUserCreationForm) -> Account:
+    try:
+        return Account.objects.get(email=user.data['customer-email'])
+    except Account.DoesNotExist:
+        return user

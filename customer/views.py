@@ -172,7 +172,6 @@ access https://docs.djangoproject.com/en/4.2/ref/request-response/ for more info
 
 
 def password_reset(request: HttpRequest) -> HttpResponse | SetPasswordForm:
-    breakpoint()
     if request.method == "POST":
         form = SetPasswordForm(request.POST)
         if form.is_valid():

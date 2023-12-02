@@ -15,7 +15,10 @@
                         <div class="card">
                             {{ customer_form.first_name.label_tag }}
                             {{ customer_form.first_name }}
-                            <div class="error-message">{{ customer_form.name.errors }}</div>
+                            <div class="error-message">{{ customer_form.first_name.errors }}</div>
+                            {{ customer_form.last_name.label_tag }}
+                            {{ customer_form.last_name }}
+                            <div class="error-message">{{ customer_form.last_name.errors }}</div>
                             {{ customer_form.email.label_tag }}
                             {{ customer_form.email }}
                             <div class="error-message">{{ customer_form.email.errors }}</div>

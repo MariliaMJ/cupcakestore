@@ -29,6 +29,10 @@
     </div>
     <div class="total-box">
         <p class="cart-total">Total: R$ {{ total }}</p>
-        <a href="{% url 'checkout' %}" class="checkout-button">Checkout</a>
+        {% if total == 0 %}
+            <a href="" class="checkout-button-unavailable">Checkout</a>
+        {% else %}
+            <a href="{% url 'checkout' %}" class="checkout-button">Checkout</a>
+        {% endif %}
     </div>
 {% endblock %}

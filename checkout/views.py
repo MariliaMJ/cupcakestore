@@ -57,6 +57,8 @@ def checkout(request: HttpRequest) -> HttpResponse:
             user = _get_account(customer_form)
             
             customer = _get_customer(user)
+            if customer is None:
+                customer = user
             customer.address = address
             customer.save()
             order = Order()
@@ -112,6 +114,8 @@ def _get_customer(user: Account) -> Customer:
 
 def _get_account(user: CustomUserCreationForm) -> Account:
     try:
+        breakpoint()
         return Account.objects.get(email=user.data['customer-email'])
     except Account.DoesNotExist:
-        return user
+        breakpoint()
+        return None
